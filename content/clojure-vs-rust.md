@@ -56,58 +56,164 @@ Secondly, the diff functionality was called by a web frontend, so I had to have 
 
 Error handling in Clojure is not opinionated.
 Similar to error messages (https://lispcast.com/clojure-error-messages-accidental/)
-, what error handling idioms exist in the Clojure community seem to me to be largely accidental.
+, what error handling idioms exist in the Clojure community seem to me to be largely accidental/inherited from Java.
 The standard library mostly supports exceptions (https://clojuredocs.org/clojure.core/ex-info).
 There are some libraries that try to support error values similar to Rusts Result, like https://github.com/adambard/failjure.
-I didn't really see popular libraries use anything other than exceptions, which makes using failjure in an application a bit frustrating.
+Others, like `instaparse`, return their own custom result values, which is a totally sensible design, but it means that I can only handle `instaparse` errors by using `insta/failure?` (https://github.com/Engelberg/instaparse/blob/4d1903b059e77dc0049dfbc75af9dce995756148/README.md#parse-errors)
 
-I used failjure to help accumulate errors in a nicer way, which worked, but I wasn't amazed by it.
-
-
-Clojure:
+I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
+It worked, but I wasn't amazed by it. See for yourself in this example:
 
 ```clj
-(defn handle-diff
-  [old-file new-file]
+(defn parse
+  [country-mapping expr]
   (fail/attempt-all
-    [[old-data new-data] (parse old-file new-file)
-     result (diff/diff old-data new-data)]
-    (-> (muuntaja/encode "application/transit+json" result)
-        (response/response)
-        (response/content-type "application/transit+json"))
-    (fail/when-failed [failure]
-                      (let [failure (fail/message failure)]
-                        (if-let [log (:log failure)]
-                          (log/warn (str "Diff failed\n" log)))
-                        (response/bad-request (or (not-empty (:msg failure))
-                                                  "Unknown failure - see logs!"))))))
+   [parse-result (insta/parse country-expr-parser expr)
+    parse-ok (if (insta/failure? parse-result)
+               (fail/fail
+                (let [msg (str "Illegal country code expression " expr)]
+                  {:msg msg
+                   :log (str msg ":\n"
+                             (with-out-str
+                               (instaparse.failure/pprint-failure parse-result)))}))
+               parse-result)
+    countries (insta/transform
+               {:expr apply-exclusions
+                :country #(get country-mapping % #{%})}
+               parse-ok)
+    spec-ok (util/check-specs "Country"
+                              identity
+                              ::spec.common/country-code
+                              countries)]
+   spec-ok
+   (fail/when-failed [failure]
+                     (fail/fail
+                      (let [msg (str "Failed to parse " expr)]
+                        (merge-with #(str %1 "\n" %2)
+                                    {:msg msg
+                                     :log msg}
+                                    (fail/message failure)))))))
 ```
 
-Rust:
+Nice things about this:
+
+* I can use fallible and infallible functions interchangeably (the call to `insta/parse` and to `insta/transform` will never return an error).
+* I can optionally add an error handling function to the very end, which is helpful to, e.g., log the argument of the function, as I did here.
+
+Not so nice things about this:
+
+* I can't see which functions can actually fail, I have to read them.
+* Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or, in this case, the `instaparse` error type to `failjure` errors.
+
+My verdict is:
+Since Clojure is a Lisp, it's possible to use most kinds of error handling and make it look fine, if you really want to.
+The most pragmatic solution in most cases will be to use exceptions
+I found that readability can suffer when errors are are not handled explicitly, especially in a dynamic language.
+I was tempted to experiment with different approaches, which gave me some experience but also took more time than if Clojure was more opinionated about the way errors should be handled.
+
+### Error handling in Rust
+
+Rust is quite opinionated about error handling.
+The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby advancing the baseline error handling.
+There are lots of good articles about error handling in Rust (https://doc.rust-lang.org/book/ch09-00-error-handling.html, https://nick.groenen.me/posts/rust-error-handling/, https://blog.yoshuawuyts.com/error-handling-survey/, https://www.youtube.com/watch?v=rAF8mLI0naQ), which make learning the state of the art relatively easy (TODO wording, do I event want to make that point?)
+Rust uses the `Result` type which contains errors as values, only using the exception-like `panic` for errors you probably don't want to recover from.
+There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that's incompatible with the rest of the ecosystem.
+
+I used `anyhow` to make aggregating errors returned from library functions seamless.
+
+Code example below
+
+TODO do I want to show the same spot as in Clojure?
+Maybe I should find another function that shows off Rusts error handling better.
 
 ```rust
-async fn diff_handler(
-    diff_params: DiffOptions,
-    form_data: multipart::FormData,
-) -> Result<impl Reply, Error> {
-    static OLD_SHEET_NAME: &str = "old";
-    static NEW_SHEET_NAME: &str = "new";
-    let mut forms = parse_form(form_data, &[OLD_SHEET_NAME, NEW_SHEET_NAME]).await?;
-    let old_input = to_parse_input(forms.remove(OLD_SHEET_NAME).unwrap(), OLD_SHEET_NAME).await?;
-    let new_input = to_parse_input(forms.remove(NEW_SHEET_NAME).unwrap(), NEW_SHEET_NAME).await?;
+fn parse(country_mapping: &CountryMapping, input: &str) -> Result<Vec<CountryCode>> {
+    let (_, (country_codes, exclusions)) = country_expr_parser(input)
+        .map_err(|e| format_err!("Failed to parse {:?}: {}", input, e))?;
 
-    match &diff_params.report {
-        Some(s) if s == "drill-down" => run_diff::<DrillDown>(old_input, new_input, diff_params),
-        _ => run_diff::<Summary>(old_input, new_input, diff_params),
-    }
+    let country_codes: Vec<_> = country_codes
+        .into_iter()
+        .flat_map(|code| {
+            country_mapping
+                .get(&code)
+                .map(Clone::clone)
+                .unwrap_or_else(|| vec![code])
+        })
+        .filter(|code| {
+            if let Some(exclusions) = &exclusions {
+                !exclusions.contains(&code)
+            } else {
+                true
+            }
+        })
+        .map(CountryCode::new)
+        .collect();
+    Ok(country_codes)
 }
 ```
+
+## Performance
+
+The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
+It also often caused memory issues, both in Clojure and in Rust.
+
+### Clojure Performance
+
+In Clojure, I often had to think about whether I should make my code less idiomatic to make it faster.
+Many idioms and design approaches were a bad idea in hot loops (destructuring, creating a large amount of small maps by repeatedly calling assoc-in/update-in instead of creating POJOs - TODO link some articles to underline this point).
+In the end I always had more option available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
+
+TODO Code example?
+
+TODO a verdict maybe? I think the initial text is enough
+
+### Rust Performance
+
+In Rust, designing for performance never felt unidiomatic (obviously, the language was designed to be very fast).
+The hardest decisions were whether I should copy data around to make my life easier or use references and save memory but have to deal with lifetime annotations everywhere.
+By the time I stopped developing the tool I still used unnecessary copies and wasn't really happy with the performance, so there's that ¯\_(ツ)_/¯
+
+TODO code example? 
+
+TODO a verdict?
+
+## Readability
+
+In Clojure, I designed my own little ad-hoc datatype patterns, but it was always hard to remember how they were shaped when I had to do something with one I hadn't touched in a while. (TODO needs example, maybe my error/log map?)
+The most sensible way to fix this would have been to introduce functions for this new "data type" that do everything i want to do with the type and never directly access the internals in any other place - exactly what Java/Rust are forcing me to do (that is, if the fields are private).
+Now I'm aware I'm admitting to a lack of personal discipline, but it's hard for me to future-proof my code when I can actually see in the REPL what the structure is, so I can just write code that directly uses it.
+
+In Rust on the other hand, this problem mostly goes away.
+It's just idiomatic to introduce types and then implement the things I want to do with them as methods on those types instead of freestanding functions somewhere else.
+Calling methods even looks nicer, so I am extra encouraged to write the code that uses the internals of a type near the definition of the type.
+This is only one of many details where Rust successfully designed a Pit of Success (https://blog.codinghorror.com/falling-into-the-pit-of-success/).
+
+Now, so far I've just been describing a very normal "slightly above trivial codebase + human memory = some design required to make it readable" situation.
+
+There was another reason why I was very happy to have a static type system again, and it was caused by the complexity of the data I was handling, which I could no longer fit in my head at once.
+See, each of the entries I was diffing had one field which was always a conjunctive normal form (https://en.wikipedia.org/wiki/Conjunctive_normal_form).
+What I had to do with that formula was replace each term with a Disjunction of other entries (this formula specified dependencies between entries, you see. I was not too happy with that design).
+
+The resulting data type was therefore a conjunction of disjunctions of terms (meaning this is negatable) of disjunctions of other rules.
+The term layer in there unfortunately prevented the easy flattening of two levels of Disjunctions.
+
+Now this might have just been me, but I was struggling to keep the current level I was operating on in my head while I was actually writing the code.
+Reading the code a few days later was even worse.
+Writing tests obviously helped, but it didn't make the problem go away.
+You can probably imagine that the code to process what is essentially several levels of nested lists consists of what is essentially nested loops.
+If you make a mistake and go one level too deep, you might loop over the leafs (which might give you a list of the key-value pairs of the rule object if it was a hashmap or a list of characters if it was a string).
+
+In Rust, the whole thing was a bit better.
+I was still regularly completely out of my depth, but the reason I could even progress was that I had a machine checking whether I was really passing a `Conjunction<Disjunction<Term<Disjunction<T>>>>` to that function.
+
+TODO ranty? not sure. muss editen
 
 ## Clojure vs Rust?
 
 Even though I might be a bit of a Rust fanboy, I don't want to be unfair against Clojure here.
-I definitely missed the Clojure REPL and Paredit in the beginning and would love to have a similar experience in Kotlin or Rust.
+
+I definitely missed the Clojure REPL and Paredit after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust.
+
 The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs.
 
-Nevertheless, I'm firmly in the position where I use Rust for fun, I'm keeping an eye open for opportunities where using Rust would be a clear improvement, and otherwise Kotlin is my day job default.
-
+Nevertheless, my current preferences are: Rust for fun, keeping an eye open for opportunities where using Rust would be a clear improvement on the job, otherwise Kotlin.
