@@ -1,10 +1,27 @@
 +++
-title = "Clojure vs Rust"
+title = "Rust excels where Clojure is lacking"
+#Clickbaity enough?
 date = 2020-12-02
+draft = true
 +++
 
+A while ago, I wrote a quite complicated diff tool in Clojure.
+It was complicated enough that I struggled to keep the algorithm in my head and the inputs were large enough that I had to make some efforts to improve performance.
+After a while, I started learning Rust, ported the current state of the Clojure program into Rust, was very happy with the change[^hooked-on-rust] and continued exclusively with Rust.
+While working on that project, I've developed some opinions about the two languages, especially about error handling, performance and readability.
 
+I think that these are areas where Rust excels, while they are among the weaker spots of Clojure[^not-hating-on-clojure-tho].
+
+To put my experience in context:
+I had a bit more than one year of experience in Clojure when I moved to Rust.
+The diff tool was by far the largest Clojure program I've ever written, and it was only about 3000 lines.
+When I started learning Rust, reimplementing the existing Clojure code was among my first Rust code.
+
+TODO some more intro before starting with error handling? Or a nice segue?
+
+<!-- 
 ## Intro
+
 
 I was quite into Clojure a while ago and was looking for something to practice on.
 So I started writing something about some relatively complicated masterdata that some of my colleagues recently started to work with.
@@ -44,68 +61,72 @@ Finally, I want to make some sweeping and completely subjective statements about
 
 I've stopped regularly lurking around the Clojure community around March 2019, so my judgements might be not completely up to date
 , looking at a recent (very good) article about clojure.spec (https://www.pixelated-noise.com/blog/2020/09/10/what-spec-is/#org6cf26d6)
-, it seems like there were no big changes.
+, it seems like there were no big changes. -->
 
 ## Error Handling
 
-My error handling experiences in this project were two-fold:
-Firstly, I had a slightly complicated parsing and validation logic in which I made efforts to accumulate errors instead of aborting at the first one.
-Secondly, the diff functionality was called by a web frontend, so I had to have some kind of main error handler in my request handling logic.
+The error handling requirements in this project were not very complicated.
+All errors just need to be logged and returned to the user.
+The only additional requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
+, instead of just the first one.
 
 ### Error Handling in Clojure
 
 Error handling in Clojure is not opinionated.
-Similar to error messages (https://lispcast.com/clojure-error-messages-accidental/)
+[Similar to error messages](https://lispcast.com/clojure-error-messages-accidental/)
 , what error handling idioms exist in the Clojure community seem to me to be largely accidental/inherited from Java.
-The standard library mostly supports exceptions (https://clojuredocs.org/clojure.core/ex-info).
-There are some libraries that try to support error values similar to Rusts Result, like https://github.com/adambard/failjure.
-Others, like `instaparse`, return their own custom result values, which is a totally sensible design, but it means that I can only handle `instaparse` errors by using `insta/failure?` (https://github.com/Engelberg/instaparse/blob/4d1903b059e77dc0049dfbc75af9dce995756148/README.md#parse-errors)
+
+The standard library mostly supports [exceptions](https://clojuredocs.org/clojure.core/ex-info).  
+There are some libraries that try to support error values similar to Rusts Result, like [the error handling library `failjure`](https://github.com/adambard/failjure).  
+Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom result values[^insta-result].
 
 I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
 It worked, but I wasn't amazed by it. See for yourself in this example:
 
 ```clj
 (defn parse
-  [country-mapping expr]
+  [country-mapping data]
   (fail/attempt-all
-   [parse-result (insta/parse country-expr-parser expr)
-    parse-ok (if (insta/failure? parse-result)
-               (fail/fail
-                (let [msg (str "Illegal country code expression " expr)]
-                  {:msg msg
-                   :log (str msg ":\n"
-                             (with-out-str
-                               (instaparse.failure/pprint-failure parse-result)))}))
-               parse-result)
-    countries (insta/transform
-               {:expr apply-exclusions
-                :country #(get country-mapping % #{%})}
-               parse-ok)
-    spec-ok (util/check-specs "Country"
-                              identity
-                              ::spec.common/country-code
-                              countries)]
-   spec-ok
+   [headers (header-row data)
+    parsed (map #(parse-rule headers country-mapping %)
+                (content-rows data))
+    failed-parses (->> parsed
+                       (filter fail/failed?)
+                       (map fail/message))
+    parse-result (if (empty? failed-parses)
+                   parsed
+                   (fail/fail
+                    (let [msg (str
+                               "Failed to parse "
+                               (count failed-parses)
+                               " rules:")]
+                      (apply merge-with #(str %1 "\n" %2)
+                             {:msg msg
+                              :log msg}
+                             failed-parses))))
+    spec-result (util/check-specs "Rules"
+                                  :rule/id
+                                  ::spec/rule
+                                  parse-result)]
+   spec-result
    (fail/when-failed [failure]
-                     (fail/fail
-                      (let [msg (str "Failed to parse " expr)]
-                        (merge-with #(str %1 "\n" %2)
-                                    {:msg msg
-                                     :log msg}
-                                    (fail/message failure)))))))
+                       (do
+                         (if-let [log (:log (fail/message failure))]
+                           (log/warn (str "Failed to parse data " data ":\n" log)))
+                         failure))))
 ```
 
 Nice things about this:
 
-* I can use fallible and infallible functions interchangeably (the call to `insta/parse` and to `insta/transform` will never return an error).
+* I can use fallible and infallible functions interchangeably (the call to `map` will never return an error).
 * I can optionally add an error handling function to the very end, which is helpful to, e.g., log the argument of the function, as I did here.
 
 Not so nice things about this:
 
 * I can't see which functions can actually fail, I have to read them.
-* Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or, in this case, the `instaparse` error type to `failjure` errors.
+* Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or other errors like the `instaparse` error value to `failjure` errors.
 
-My verdict is:
+My verdict is:  
 Since Clojure is a Lisp, it's possible to use most kinds of error handling and make it look fine, if you really want to.
 The most pragmatic solution in most cases will be to use exceptions
 I found that readability can suffer when errors are are not handled explicitly, especially in a dynamic language.
@@ -115,57 +136,79 @@ I was tempted to experiment with different approaches, which gave me some experi
 
 Rust is quite opinionated about error handling.
 The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby advancing the baseline error handling.
-There are lots of good articles about error handling in Rust (https://doc.rust-lang.org/book/ch09-00-error-handling.html, https://nick.groenen.me/posts/rust-error-handling/, https://blog.yoshuawuyts.com/error-handling-survey/, https://www.youtube.com/watch?v=rAF8mLI0naQ), which make learning the state of the art relatively easy (TODO wording, do I event want to make that point?)
+There are lots of good articles about error handling in Rust[^rust-error-handling-links], which make learning the state of the art relatively easy. (TODO wording, do I even want to make that point?)
+
 Rust uses the `Result` type which contains errors as values, only using the exception-like `panic` for errors you probably don't want to recover from.
 There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that's incompatible with the rest of the ecosystem.
 
 I used `anyhow` to make aggregating errors returned from library functions seamless.
 
-Code example below
-
-TODO do I want to show the same spot as in Clojure?
-Maybe I should find another function that shows off Rusts error handling better.
 
 ```rust
-fn parse(country_mapping: &CountryMapping, input: &str) -> Result<Vec<CountryCode>> {
-    let (_, (country_codes, exclusions)) = country_expr_parser(input)
-        .map_err(|e| format_err!("Failed to parse {:?}: {}", input, e))?;
-
-    let country_codes: Vec<_> = country_codes
-        .into_iter()
-        .flat_map(|code| {
-            country_mapping
-                .get(&code)
-                .map(Clone::clone)
-                .unwrap_or_else(|| vec![code])
-        })
-        .filter(|code| {
-            if let Some(exclusions) = &exclusions {
-                !exclusions.contains(&code)
-            } else {
-                true
-            }
-        })
-        .map(CountryCode::new)
-        .collect();
-    Ok(country_codes)
+pub fn parse(
+    workbook: &mut Workbook,
+    country_mapping: CountryMapping,
+) -> Result<Vec<Rule>> {
+    let range = workbook
+        .worksheet_range("Rules")
+        .ok_or(format_err!("Missing Rules sheet"))??;
+    let range = skip_to_header_row(range)?;
+    let parsed = RangeDeserializerBuilder::new()
+        .has_headers(true)
+        .from_range(&range)
+        .context("Failed to read Rules sheet")?;
+    let rules = collect_errs(parsed.map(|parse_result| {
+        parse_result
+            .map_err(|e| e.into())
+            .and_then(|row| row.parse(&country_mapping))
+    }))
+    .map_err(|es| {
+        format_err!(
+            "Failed to parse {} rules:\n{}",
+            es.len(),
+            es.into_iter()
+                .map(|e| e.to_string())
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
+    })?;
+    Ok(rules)
 }
 ```
+
+Nice things about this:
+
+* The standard library, every Rust library I've ever seen and my own application code is always using the same [`Result` type](https://doc.rust-lang.org/std/result/enum.Result.html), which keeps things pretty compatible.
+* [The `?` operator](https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html) makes the error handling visible but succinct.  
+  It also automatically converts error types where possible, which reduces the need for manual type conversion.
+* The error type I'm using here from the [library `anyhow`](https://docs.rs/anyhow/*/anyhow/index.html) supports [a `.context` method](https://docs.rs/anyhow/*/anyhow/trait.Context.html), which makes otherwise unhelpful low-level errors usable.  
+  This is usually done in Exception-based languages by catching, wrapping and rethrowing exceptions, but this looks a lot more pleasant.
+
+Not so nice things about this:
+
+* I have to keep the error types compatible, which I accomplish in this case by not distinguishing between different error types at all[^anyhow-usecase].  
+  I still have to return a single error value, which means I have to manually and verbosely convert the list of errors into a single, newline-delimited string.
+* If I want to log something when this entire function returns an error or add some `.context` to it, the current best practice seems to be do move the entire body into an inner function `inner` and then call `inner(...).map_err(|e| ...)`.  
+  I can't wait for [`try` blocks](https://doc.rust-lang.org/nightly/unstable-book/language-features/try-blocks.html) to be stabilized.
+
+My verdict is:  
+In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it].  
+The main design decisions are whether you use some of the helper libraries and how you design your error types.
+There's enough writing about this topic that I quickly felt comfortable about my decisions because I knew that they were idiomatic (or at least close enough).
 
 ## Performance
 
 The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
-It also often caused memory issues, both in Clojure and in Rust.
+The large amount of data also often caused memory issues in both languages.
+Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
 
 ### Clojure Performance
 
 In Clojure, I often had to think about whether I should make my code less idiomatic to make it faster.
-Many idioms and design approaches were a bad idea in hot loops (destructuring, creating a large amount of small maps by repeatedly calling assoc-in/update-in instead of creating POJOs - TODO link some articles to underline this point).
-In the end I always had more option available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
+Many idioms and design approaches are discouraged in hot loops (destructuring, creating a large amount of small maps by repeatedly calling assoc-in/update-in instead of creating POJOs - TODO link some articles to underline this point).
+In the end I always had more options available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
 
-TODO Code example?
-
-TODO a verdict maybe? I think the initial text is enough
+TODO I don't think I will show code examples here
 
 ### Rust Performance
 
@@ -206,7 +249,7 @@ If you make a mistake and go one level too deep, you might loop over the leafs (
 In Rust, the whole thing was a bit better.
 I was still regularly completely out of my depth, but the reason I could even progress was that I had a machine checking whether I was really passing a `Conjunction<Disjunction<Term<Disjunction<T>>>>` to that function.
 
-TODO ranty? not sure. muss editen
+TODO ranty? not sure. need to edit
 
 ## Clojure vs Rust?
 
@@ -216,4 +259,24 @@ I definitely missed the Clojure REPL and Paredit after I stopped writing Clojure
 
 The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs.
 
+Rust on the other hand is the most usable language that offers features that are otherwise only available in ML or Haskell.
+Writing Rust can sometimes feel as highlevel and productive as writing Kotlin[^rust-vs-kotlin], but with a more expressive type system and the option to go as low-level is I want.
+
 Nevertheless, my current preferences are: Rust for fun, keeping an eye open for opportunities where using Rust would be a clear improvement on the job, otherwise Kotlin.
+
+----
+
+[^hooked-on-rust]: I was immediately hooked by the incredibly fast performance - which was initially mostly the difference between startup times and the respective excel parsing libraries.
+
+[^not-hating-on-clojure-tho]: I don't want to rip into Clojure here, after Rust and Kotlin it's my third favourite language.
+
+[^insta-result]: This is a totally sensible design, but it means that I can only handle `instaparse` errors by using the `instaparse` [function `insta/failure?`](https://github.com/Engelberg/instaparse/blob/4d1903b059e77dc0049dfbc75af9dce995756148/README.md#parse-errors)
+
+[^rust-error-handling-links]: See [the Rust Book](https://doc.rust-lang.org/book/ch09-00-error-handling.html), [this blog post](https://blog.burntsushi.net/rust-error-handling/) by [ripgrep's](https://github.com/BurntSushi/ripgrep/) Andrew Gallant, [the error handling survey by Yoshua Wuyts](https://blog.yoshuawuyts.com/error-handling-survey/), [this blog post by Nick Groenen](https://nick.groenen.me/posts/rust-error-handling/) or [this talk by Jane Lusby](https://www.youtube.com/watch?v=rAF8mLI0naQ).
+
+[^anyhow-usecase]: Handling all error types uniformly is `anyhow`s main usecase.
+
+[^and-you'll-like-it]: Seriously, it's quite popular.
+
+[^rust-vs-kotlin]: See [this article](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/) by Aleksey Kladov for a more thorough comparison between Kotlin and Rust.
+
