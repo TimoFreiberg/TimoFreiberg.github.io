@@ -2,7 +2,6 @@
 title = "Rust excels where Clojure is lacking"
 #Clickbaity enough?
 date = 2020-12-02
-draft = true
 +++
 
 A while ago, I wrote a quite complicated diff tool in Clojure.
