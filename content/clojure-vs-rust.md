@@ -5,7 +5,7 @@ date = 2020-12-02
 +++
 
 A while ago, I wrote a quite complicated diff tool in Clojure.
-It was complicated enough that I struggled to keep the algorithm in my head and the inputs were large enough that I had to make some efforts to improve performance.
+It was complicated enough that I struggled to fit the algorithm in my head and the inputs were large enough that I had to make some efforts to improve performance.
 After a while, I started learning Rust, ported the current state of the Clojure program into Rust, was very happy with the change[^hooked-on-rust] and continued exclusively with Rust.
 While working on that project, I've developed some opinions about the two languages, especially about error handling, performance and readability.
 
@@ -13,8 +13,10 @@ I think that these are areas where Rust excels, while they are among the weaker 
 
 To put my experience in context:
 I had a bit more than one year of experience in Clojure when I moved to Rust.
-The diff tool was by far the largest Clojure program I've ever written, and it was only about 3000 lines.
-When I started learning Rust, reimplementing the existing Clojure code was among my first Rust code.
+The diff tool was by far the largest Clojure program I've ever written, and it was only about 3000 lines.  
+When I started writing Rust, reimplementing the existing Clojure code was among my first Rust code.
+I've continued learning Rust since then and have mostly stopped writing Clojure.
+If things have changed in Clojure recently, please let me know and I'll update the article.
 
 TODO some more intro before starting with error handling? Or a nice segue?
 
@@ -66,7 +68,7 @@ I've stopped regularly lurking around the Clojure community around March 2019, s
 
 The error handling requirements in this project were not very complicated.
 All errors just need to be logged and returned to the user.
-The only additional requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
+The only slightly unusual requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
 , instead of just the first one.
 
 ### Error Handling in Clojure
@@ -76,7 +78,7 @@ Error handling in Clojure is not opinionated.
 , what error handling idioms exist in the Clojure community seem to me to be largely accidental/inherited from Java.
 
 The standard library mostly supports [exceptions](https://clojuredocs.org/clojure.core/ex-info).  
-There are some libraries that try to support error values similar to Rusts Result, like [the error handling library `failjure`](https://github.com/adambard/failjure).  
+There are some libraries that support returning error values instead of throwing exceptions like [the error handling library `failjure`](https://github.com/adambard/failjure).  
 Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom result values[^insta-result].
 
 I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
@@ -123,18 +125,19 @@ Nice things about this:
 Not so nice things about this:
 
 * I can't see which functions can actually fail, I have to read them.
-* Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or other errors like the `instaparse` error value to `failjure` errors.
+* Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or other errors like `instaparse` error values to `failjure` errors.
 
 My verdict is:  
 Since Clojure is a Lisp, it's possible to use most kinds of error handling and make it look fine, if you really want to.
-The most pragmatic solution in most cases will be to use exceptions
-I found that readability can suffer when errors are are not handled explicitly, especially in a dynamic language.
+The most pragmatic solution in most cases will be to use exceptions.
+I found that readability can suffer when errors are not handled explicitly, especially in a dynamic language.
 I was tempted to experiment with different approaches, which gave me some experience but also took more time than if Clojure was more opinionated about the way errors should be handled.
 
 ### Error handling in Rust
 
 Rust is quite opinionated about error handling.
 The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby advancing the baseline error handling.
+This instability has been painful for some people, TODO
 There are lots of good articles about error handling in Rust[^rust-error-handling-links], which make learning the state of the art relatively easy. (TODO wording, do I even want to make that point?)
 
 Rust uses the `Result` type which contains errors as values, only using the exception-like `panic` for errors you probably don't want to recover from.
@@ -194,6 +197,7 @@ My verdict is:
 In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it].  
 The main design decisions are whether you use some of the helper libraries and how you design your error types.
 There's enough writing about this topic that I quickly felt comfortable about my decisions because I knew that they were idiomatic (or at least close enough).
+
 
 ## Performance
 
