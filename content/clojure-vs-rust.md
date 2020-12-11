@@ -137,14 +137,17 @@ I was tempted to experiment with different approaches, which gave me some experi
 
 Rust is quite opinionated about error handling.
 The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby advancing the baseline error handling.
-This instability has been painful for some people, TODO
-There are lots of good articles about error handling in Rust[^rust-error-handling-links], which make learning the state of the art relatively easy. (TODO wording, do I even want to make that point?)
 
-Rust uses the `Result` type which contains errors as values, only using the exception-like `panic` for errors you probably don't want to recover from.
+There's no improvement without change, and the frequent changes have been a source of complaints.
+While backwards compatibility was never broken, people that wanted their code to be idiomatic had to update it anyway.
+Old tutorials and guides have therefore also become outdated.
+
+There are lots of good, up-to-date articles about error handling in Rust[^rust-error-handling-links], which help learn the current idioms.
+
+In Rust, functions that can error return the [`Result` type](https://doc.rust-lang.org/std/result/index.html)[^panic-ref].  
 There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that's incompatible with the rest of the ecosystem.
 
 I used `anyhow` to make aggregating errors returned from library functions seamless.
-
 
 ```rust
 pub fn parse(
@@ -204,6 +207,7 @@ There's enough writing about this topic that I quickly felt comfortable about my
 The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
 The large amount of data also often caused memory issues in both languages.
 Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
+
 
 ### Clojure Performance
 
@@ -277,9 +281,11 @@ Nevertheless, my current preferences are: Rust for fun, keeping an eye open for 
 
 [^rust-error-handling-links]: See [the Rust Book](https://doc.rust-lang.org/book/ch09-00-error-handling.html), [this blog post](https://blog.burntsushi.net/rust-error-handling/) by [ripgrep's](https://github.com/BurntSushi/ripgrep/) Andrew Gallant, [the error handling survey by Yoshua Wuyts](https://blog.yoshuawuyts.com/error-handling-survey/), [this blog post by Nick Groenen](https://nick.groenen.me/posts/rust-error-handling/) or [this talk by Jane Lusby](https://www.youtube.com/watch?v=rAF8mLI0naQ).
 
+[^panic-ref]: There's also the [`panic` macro](https://doc.rust-lang.org/std/macro.panic.html) which works similar to exceptions in that it stops and unwinds your program, but unlike exceptions catching a panic is very rarely a good idea.
+
 [^anyhow-usecase]: Handling all error types uniformly is `anyhow`s main usecase.
 
-[^and-you'll-like-it]: Seriously, it's quite popular.
+[^and-you'l-like-it]: Seriously, it's quite popular.
 
 [^rust-vs-kotlin]: See [this article](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/) by Aleksey Kladov for a more thorough comparison between Kotlin and Rust.
 
