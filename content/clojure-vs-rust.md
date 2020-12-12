@@ -82,7 +82,8 @@ There are some libraries that support returning error values instead of throwing
 Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom result values[^insta-result].
 
 I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
-It worked, but I wasn't amazed by it. See for yourself in this example:
+
+Let's look at a Clojure function that parses and validates the input data, aggregating errors:
 
 ```clj
 (defn parse
@@ -147,7 +148,7 @@ There are lots of good, up-to-date articles about error handling in Rust[^rust-e
 In Rust, functions that can error return the [`Result` type](https://doc.rust-lang.org/std/result/index.html)[^panic-ref].  
 There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that's incompatible with the rest of the ecosystem.
 
-I used `anyhow` to make aggregating errors returned from library functions seamless.
+Let's look at the same function as before, but this time in Rust:
 
 ```rust
 pub fn parse(
@@ -192,33 +193,114 @@ Nice things about this:
 Not so nice things about this:
 
 * I have to keep the error types compatible, which I accomplish in this case by not distinguishing between different error types at all[^anyhow-usecase].  
-  I still have to return a single error value, which means I have to manually and verbosely convert the list of errors into a single, newline-delimited string.
-* If I want to log something when this entire function returns an error or add some `.context` to it, the current best practice seems to be do move the entire body into an inner function `inner` and then call `inner(...).map_err(|e| ...)`.  
-  I can't wait for [`try` blocks](https://doc.rust-lang.org/nightly/unstable-book/language-features/try-blocks.html) to be stabilized.
-
+  I still have to return a single error value, which means I have to manually and verbosely convert the list of errors into a single one - in this case a newline-delimited string.
+* If I want to log something when this entire function returns an error or add some `.context` to it, I would like to have the equivalent of a `try/catch`-block around the entire function body.  
+  This doesn't exist yet[^try-blocks], the current best practice seems to be do move the entire body into an inner function or lambda.  
+  
 My verdict is:  
 In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it].  
 The main design decisions are whether you use some of the helper libraries and how you design your error types.
-Designing the error types can be a challenge though, especially because it's a bit different than designing e.g. Java exception hierarchies.
+
+Designing the error types can be a challenge though, especially because it's a bit different than designing e.g. Java exception hierarchies.  
 I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me, it might have been painful for teams maintaining bigger production systems.
 The large number of error handling tutorials and articles should hopefully make it easier to learn now than it was a few years ago.
 
+The learning curve aside:
+To me, Rust's error handling feels like part of the secret sauce that makes it the most promising language for correctness that I know of.
 
 ## Performance
 
+The part of the program that caused performance issues was the diff algorithm, 
 The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
 The large amount of data also often caused memory issues in both languages.
 Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
 
 ### Clojure Performance
 
-In Clojure, I often had to think about whether I should make my code less idiomatic to make it faster.
-Many idioms and design approaches are discouraged in hot loops (destructuring, creating a large amount of small maps by repeatedly calling assoc-in/update-in instead of creating POJOs - TODO link some articles to underline this point).
+In Clojure, making my code faster often meant making it less idiomatic.
+Many of Clojure's idioms and design approaches are discouraged when optimizing code for performance:  
+using destructuring, laziness, the lazy sequence API, or using the usual Clojure hashmap as the main datastructure in hot loops[^clojure-goes-fast].
 In the end I always had more options available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
 
-TODO I don't think I will show code examples here
+Let's look at one of the Clojure functions that were part of a medium-hot part of the program, where the input data was normalized:
+
+```clj
+(defn rule-field-diff
+  [rule1 rule2]
+  (let [field-diff-fn (fn [operations]
+                        (->>
+                          ; 👇 laziness  👇 destructuring
+                          (for [{:keys [field op]} operations
+                                :let [field1 (get rule1 field)
+                                      field2 (get rule2 field)]]
+                            ; 👇 a hashmap used in a (medium)-hot loop
+                            {:field field
+                            :eq? (op field1 field2)
+                            :left field1
+                            :right field2})
+                          ;              👇 hashmap lookup
+                          (filter #(not (:eq? %)))
+                          ;      👇 hashmap operation
+                          (map #(dissoc % :eq?))))
+        diff (field-diff-fn rule-must-be-equal-operations)
+        mergeable-diff (field-diff-fn mergeable-rule-operations)]
+    {:rule1 rule1
+     :rule2 rule2
+     :diff diff
+     :mergeable-diff mergeable-diff}))
+```
+
+and here's one from the hottest part, where the data was diffed by one of its fields:
+
+```clj
+(defn diff-rules-by-keys
+  ;        👇 destructuring
+  [{:keys [group-by-key-fn key-name]} path rules1 rules2]
+  ;                  👇 hashmap lookup
+  (let [key->rules1 (group-by-key-fn rules1)
+        key->rules2 (group-by-key-fn rules2)
+        keys1 (set (keys key->rules1))
+        keys2 (set (keys key->rules2))
+        key-union (set/union keys1 keys2)]
+    ; 👇 laziness
+    (for [k key-union
+          :let [path (conj path
+                           {:key-name key-name
+                            :key-val k})]]
+      (case [(contains? keys1 k)
+             (contains? keys2 k)]
+        [true true] {::continue true
+                     :path path
+                     ::rules1 (get key->rules1 k)
+                     ::rules2 (get key->rules2 k)}
+        [false true] {:plus true
+                      :path path
+                      :rules (set (get key->rules2 k))}
+        [true false] {:minus true
+                      :path path
+                      :rules (set (get key->rules1 k))}))))
+```
+
+So there are some obvious inefficiencies that might be worth it to change!
+Unfortunately, doing that will make small details a bit uglier (when removing destructuring or the [for expressions](https://clojuredocs.org/clojure.core/for)) or require lots of additional changes (when replacing the hashmaps with records, for example).
+
+My verdict is:
+
+Clojure successfully makes it possible to write fast code when necessary, but idiomatic Clojure willingly sacrifices some performance for expressiveness and its lispy dynamicity.  
+This is fine.
+I was actually very positively surprised by all the escape hatches that were designed into the language to speed things up when necessary.  
+
+I do like having the freedom to introduce abstractions that will have exactly no runtime cost at all, which leads me to
+
 
 ### Rust Performance
+
+One of Rust's design goals was performance, and it [can](https://kornel.ski/rust-c-speed) [compete](https://github.com/ixy-languages/ixy-languages/blob/master/Rust-vs-C-performance.md) with C.  
+But this doesn't automatically make my program the fastest - I can write slow code in any language!
+What was more interesting to me was how fast my program was going to be if I got it working and then spent one or two motivated weekends optimizing as best as I could.
+
+Rust's [zero cost abstractions](https://boats.gitlab.io/blog/post/zero-cost-abstractions/) definitely help with that.
+TODO examples: wrappers are free, functional programming styles as optimized as imperative style, mutability can be good for performance and is tractable in rust!
 
 In Rust, designing for performance never felt unidiomatic (obviously, the language was designed to be very fast).
 The hardest decisions were whether I should copy data around to make my life easier or use references and save memory but have to deal with lifetime annotations everywhere.
@@ -229,6 +311,8 @@ TODO code example?
 TODO a verdict?
 
 ## Readability
+
+TODO remove this section, maybe move it into a followup article?
 
 In Clojure, I designed my own little ad-hoc datatype patterns, but it was always hard to remember how they were shaped when I had to do something with one I hadn't touched in a while. (TODO needs example, maybe my error/log map?)
 The most sensible way to fix this would have been to introduce functions for this new "data type" that do everything i want to do with the type and never directly access the internals in any other place - exactly what Java/Rust are forcing me to do (that is, if the fields are private).
@@ -286,7 +370,13 @@ Nevertheless, my current preferences are: Rust for fun, keeping an eye open for 
 
 [^anyhow-usecase]: Handling all error types uniformly is `anyhow`s main usecase.
 
-[^and-you'l-like-it]: Seriously, it's quite popular.
+[^try-blocks]: I can't wait for [`try` blocks](https://doc.rust-lang.org/nightly/unstable-book/language-features/try-blocks.html) to be stabilized.
+
+[^and-you'll-like-it]: Seriously, it's quite popular.
+
+[^clojure-goes-fast]: See [these](https://tech.redplanetlabs.com/2020/09/02/clojure-faster/) [articles](http://clojure-goes-fast.com/blog/java-arrays-and-unchecked-math/) on how to improve Clojure performance.
+They are, as far as I can tell, very accurate and contain good advice.
+They also both discourage usual Clojure idioms or recommend less idiomatic alternatives.
 
 [^paredit-rust]: [Rust-analyzer](https://rust-analyzer.github.io/manual.html#extend-selection) and [IntelliJ](https://www.jetbrains.com/help/idea/working-with-source-code.html#editor_code_selection) support semantic extend/shrink selection though, which is an important feature of Paredit.
 The slurp and barf features of Paredit probably don't make a lot of sense in languages without S-expressions anyway.
