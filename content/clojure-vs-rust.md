@@ -199,7 +199,9 @@ Not so nice things about this:
 My verdict is:  
 In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it].  
 The main design decisions are whether you use some of the helper libraries and how you design your error types.
-There's enough writing about this topic that I quickly felt comfortable about my decisions because I knew that they were idiomatic (or at least close enough).
+Designing the error types can be a challenge though, especially because it's a bit different than designing e.g. Java exception hierarchies.
+I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me, it might have been painful for teams maintaining bigger production systems.
+The large number of error handling tutorials and articles should hopefully make it easier to learn now than it was a few years ago.
 
 
 ## Performance
@@ -207,7 +209,6 @@ There's enough writing about this topic that I quickly felt comfortable about my
 The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
 The large amount of data also often caused memory issues in both languages.
 Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
-
 
 ### Clojure Performance
 
@@ -262,7 +263,7 @@ TODO ranty? not sure. need to edit
 
 Even though I might be a bit of a Rust fanboy, I don't want to be unfair against Clojure here.
 
-I definitely missed the Clojure REPL and Paredit after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust.
+I definitely missed the Clojure [REPL](https://clojure.org/guides/repl/introduction) and [Paredit](http://danmidwood.com/content/2014/11/21/animated-paredit.html) after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust[^paredit-rust].
 
 The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs.
 
@@ -286,6 +287,9 @@ Nevertheless, my current preferences are: Rust for fun, keeping an eye open for 
 [^anyhow-usecase]: Handling all error types uniformly is `anyhow`s main usecase.
 
 [^and-you'l-like-it]: Seriously, it's quite popular.
+
+[^paredit-rust]: [Rust-analyzer](https://rust-analyzer.github.io/manual.html#extend-selection) and [IntelliJ](https://www.jetbrains.com/help/idea/working-with-source-code.html#editor_code_selection) support semantic extend/shrink selection though, which is an important feature of Paredit.
+The slurp and barf features of Paredit probably don't make a lot of sense in languages without S-expressions anyway.
 
 [^rust-vs-kotlin]: See [this article](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/) by Aleksey Kladov for a more thorough comparison between Kotlin and Rust.
 
