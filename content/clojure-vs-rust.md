@@ -1,24 +1,22 @@
 +++
-title = "Rust excels where Clojure is lacking"
-#Clickbaity enough?
-date = 2020-12-02
+title = "I rewrote a Clojure program in Rust"
+date = 2020-12-13
 +++
 
-A while ago, I wrote a quite complicated diff tool in Clojure.
+About two years ago, I wrote a quite complicated diff tool in Clojure.  
 It was complicated enough that I struggled to fit the algorithm in my head and the inputs were large enough that I had to make some efforts to improve performance.
-After a while, I started learning Rust, ported the current state of the Clojure program into Rust, was very happy with the change[^hooked-on-rust] and continued exclusively with Rust.
-While working on that project, I've developed some opinions about the two languages, especially about error handling, performance and readability.
 
-I think that these are areas where Rust excels, while they are among the weaker spots of Clojure[^not-hating-on-clojure-tho].
+About half a year later, I started learning Rust, ported the current state of the Clojure program into Rust, was very happy with the change[^hooked-on-rust] and continued exclusively with Rust.  
+While working on that project, I've developed some opinions about the two languages, especially about error handling and performance:
+
+I think that these are areas where Rust excels, while they are among the weaker spots of Clojure[^not-hating-on-clojure].
 
 To put my experience in context:
 I had a bit more than one year of experience in Clojure when I moved to Rust.
 The diff tool was by far the largest Clojure program I've ever written, and it was only about 3000 lines.  
 When I started writing Rust, reimplementing the existing Clojure code was among my first Rust code.
-I've continued learning Rust since then and have mostly stopped writing Clojure.
+I've continued learning Rust since then and have mostly stopped writing Clojure.  
 If things have changed in Clojure recently, please let me know and I'll update the article.
-
-TODO some more intro before starting with error handling? Or a nice segue?
 
 <!-- 
 ## Intro
@@ -67,13 +65,13 @@ I've stopped regularly lurking around the Clojure community around March 2019, s
 ## Error Handling
 
 The error handling requirements in this project were not very complicated.
-All errors just need to be logged and returned to the user.
+All errors just need to be logged and returned to the user.  
 The only slightly unusual requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
-, instead of just the first one.
+, instead of just the first one, so I had to accumulate errors.
 
 ### Error Handling in Clojure
 
-Error handling in Clojure is not opinionated.
+Error handling in Clojure is not opinionated.  
 [Similar to error messages](https://lispcast.com/clojure-error-messages-accidental/)
 , what error handling idioms exist in the Clojure community seem to me to be largely accidental/inherited from Java.
 
@@ -137,9 +135,9 @@ I was tempted to experiment with different approaches, which gave me some experi
 ### Error handling in Rust
 
 Rust is quite opinionated about error handling.
-The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby advancing the baseline error handling.
+The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby improving the baseline error handling.
 
-There's no improvement without change, and the frequent changes have been a source of complaints.
+There's no improvement without change though, and the frequent changes have been a source of complaints.
 While backwards compatibility was never broken, people that wanted their code to be idiomatic had to update it anyway.
 Old tutorials and guides have therefore also become outdated.
 
@@ -202,7 +200,7 @@ In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it
 The main design decisions are whether you use some of the helper libraries and how you design your error types.
 
 Designing the error types can be a challenge though, especially because it's a bit different than designing e.g. Java exception hierarchies.  
-I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me, it might have been painful for teams maintaining bigger production systems.
+I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me as I was not under time pressure and often worked in my spare time to learn. It might have been painful for teams maintaining bigger production systems.  
 The large number of error handling tutorials and articles should hopefully make it easier to learn now than it was a few years ago.
 
 The learning curve aside:
@@ -210,7 +208,7 @@ To me, Rust's error handling feels like part of the secret sauce that makes it t
 
 ## Performance
 
-The part of the program that caused performance issues was the diff algorithm, 
+The part of the program that caused performance issues was the diff algorithm and, to a lesser extent, the data normalization step before that.  
 The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
 The large amount of data also often caused memory issues in both languages.
 Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
@@ -219,28 +217,28 @@ Inefficiencies in the algorithm often caused both noticeable slowdowns and extre
 
 In Clojure, making my code faster often meant making it less idiomatic.
 Many of Clojure's idioms and design approaches are discouraged when optimizing code for performance:  
-using destructuring, laziness, the lazy sequence API, or using the usual Clojure hashmap as the main datastructure in hot loops[^clojure-goes-fast].
+using destructuring, laziness, the lazy sequence API, or using the usual Clojure hashmap as the main datastructure in hot loops[^clojure-goes-fast].  
 In the end I always had more options available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
 
 Let's look at one of the Clojure functions that were part of a medium-hot part of the program, where the input data was normalized:
 
-```clj
+```clojure
 (defn rule-field-diff
   [rule1 rule2]
   (let [field-diff-fn (fn [operations]
                         (->>
-                          ; 👇 laziness  👇 destructuring
+                        #_"👇 laziness  👇 destructuring"
                           (for [{:keys [field op]} operations
                                 :let [field1 (get rule1 field)
                                       field2 (get rule2 field)]]
-                            ; 👇 a hashmap used in a (medium)-hot loop
+                         #_"👇 a hashmap used in a (medium)-hot loop"
                             {:field field
                             :eq? (op field1 field2)
                             :left field1
                             :right field2})
-                          ;              👇 hashmap lookup
+                          #_"            👇 hashmap lookup"
                           (filter #(not (:eq? %)))
-                          ;      👇 hashmap operation
+                          #_"    👇 hashmap operation"
                           (map #(dissoc % :eq?))))
         diff (field-diff-fn rule-must-be-equal-operations)
         mergeable-diff (field-diff-fn mergeable-rule-operations)]
@@ -254,21 +252,22 @@ and here's one from the hottest part, where the data was diffed by one of its fi
 
 ```clj
 (defn diff-rules-by-keys
-  ;        👇 destructuring
+  #_"      👇 destructuring"
   [{:keys [group-by-key-fn key-name]} path rules1 rules2]
-  ;                  👇 hashmap lookup
+  #_"                👇 hashmap lookup"
   (let [key->rules1 (group-by-key-fn rules1)
         key->rules2 (group-by-key-fn rules2)
         keys1 (set (keys key->rules1))
         keys2 (set (keys key->rules2))
         key-union (set/union keys1 keys2)]
-    ; 👇 laziness
+  #_"👇 laziness"
     (for [k key-union
           :let [path (conj path
                            {:key-name key-name
                             :key-val k})]]
       (case [(contains? keys1 k)
              (contains? keys2 k)]
+        #_"          👇 hashmaps used in a hot loop"
         [true true] {::continue true
                      :path path
                      ::rules1 (get key->rules1 k)
@@ -281,35 +280,124 @@ and here's one from the hottest part, where the data was diffed by one of its fi
                       :rules (set (get key->rules1 k))}))))
 ```
 
-So there are some obvious inefficiencies that might be worth it to change!
+So there are some obvious inefficiencies that might be worth it to change, great!
 Unfortunately, doing that will make small details a bit uglier (when removing destructuring or the [for expressions](https://clojuredocs.org/clojure.core/for)) or require lots of additional changes (when replacing the hashmaps with records, for example).
 
 My verdict is:
 
 Clojure successfully makes it possible to write fast code when necessary, but idiomatic Clojure willingly sacrifices some performance for expressiveness and its lispy dynamicity.  
 This is fine.
+Clojure does not want to be a low-level language.  
 I was actually very positively surprised by all the escape hatches that were designed into the language to speed things up when necessary.  
 
-I do like having the freedom to introduce abstractions that will have exactly no runtime cost at all, which leads me to
-
+I do like having the freedom to introduce abstractions that will have no runtime cost at all.
+So let's look at Rust:
 
 ### Rust Performance
 
 One of Rust's design goals was performance, and it [can](https://kornel.ski/rust-c-speed) [compete](https://github.com/ixy-languages/ixy-languages/blob/master/Rust-vs-C-performance.md) with C.  
-But this doesn't automatically make my program the fastest - I can write slow code in any language!
+But this doesn't automatically make my program the fastest - I can write slow code in any language!  
 What was more interesting to me was how fast my program was going to be if I got it working and then spent one or two motivated weekends optimizing as best as I could.
 
-Rust's [zero cost abstractions](https://boats.gitlab.io/blog/post/zero-cost-abstractions/) definitely help with that.
-TODO examples: wrappers are free, functional programming styles as optimized as imperative style, mutability can be good for performance and is tractable in rust!
+Rust's [zero cost abstractions](https://boats.gitlab.io/blog/post/zero-cost-abstractions/) definitely helped with that.  
+I could introduce wrapper types to make my type signatures more readable without affecting the performance at all.
+I could use the functional [`Iterator` methods](https://doc.rust-lang.org/std/iter/trait.Iterator.html) like `map` and `filter` and get the same performance as if I was using imperative loops.
 
-In Rust, designing for performance never felt unidiomatic (obviously, the language was designed to be very fast).
-The hardest decisions were whether I should copy data around to make my life easier or use references and save memory but have to deal with lifetime annotations everywhere.
-By the time I stopped developing the tool I still used unnecessary copies and wasn't really happy with the performance, so there's that ¯\_(ツ)_/¯
+I could also use mutability freely under the watchful eye of Rusts type system, which can both improve performance and make things more readable.
+Oldschool imperative/OO languages like Java allowed mutability everywhere, which often caused problems[^mutability-problems].
+Functional languages like Haskell and Clojure then tried to solve the problems with mutability by removing mutability as much as possible.  
+Rust has surprised me by making mutability palatable again[^mutability-palatable].
 
-TODO code example? 
+The area where Rust programmers [often](https://nnethercote.github.io/perf-book/heap-allocations.html?highlight=borrow#cow) [have](https://deterministic.space/secret-life-of-cows.html#no-needless-copying) [to](https://llogiq.github.io/2017/06/01/perf-pitfalls.html) [decide](https://www.reddit.com/r/rust/comments/adyd9j/why_is_the_rust_version_of_this_fn_60_slower_than/edl0bly/?utm_source=reddit&utm_medium=web2x&context=3) between simple code and performance is when deciding between needlessly copying data or using references to the data.  
+Using references to a single instance of data can be wildly more performant, but it requires lifetime annotations and sometimes requires redesigning the code[^borrow-redesign].
 
-TODO a verdict?
+Let's look at one of the functions in the medium-hot data normalization part again:
 
+```rust 
+    //                  👇  mutability here! it's fine though
+    pub fn intersection(mut self, other: &Self) -> Option<Self> {
+
+        match (self.$field.accepts_all(), other.$field.accepts_all()) {
+            // use the more restrictive field
+            (true, false) => {
+                *self.$field = other.$field.clone();
+            }
+            // self is more constrained, so we keep self
+            (false, true) => {}
+            // both accept everything, we can keep self
+            (true, true) => {}
+            // both are constrained, we need to calculate the intersection
+            (false, false) => {
+                let intersection = self.$field
+                    .into_iter()
+                    // 👇 functional iterator API
+                    .filter(|x| other.$field.contains(x))
+                    .collect::<Vec<_>>();
+
+                // empty intersection -> unsatisfiable
+                if intersection.is_empty() {
+                    // 👇 sometimes, imperative logic is nice!
+                    return None;
+                }
+                // 👇 mutability again
+                self.$field = intersection;
+            }
+        }
+
+        // if we didn't return None early, the field must be satisfiable!
+        Some(self)
+    }
+```
+
+Note the `$field` in the body - this was actually inside a macro definition!
+Parameterizing the logic by field access and type was a bit clunky in Rust.
+Similar functions in the Clojure version just take a keyword argument.
+
+Let's now look at one of the hottest functions in the Rust implementation:
+
+```rust
+    fn next_step<T: Debug + PartialEq + Ord + Hash, F: RuleField<'a, Item = T>>(
+        &self,
+        matcher: FieldMatcher<'a, T, F>,
+    ) -> Self {
+        //TODO according to heaptrack, this is a RAM hotspot. what do?
+        let old_rules: Vec<_> = self
+            .old_rules
+            .iter()
+            // 👇 this filter should be fast
+            .filter(|vs| matcher.matches_inlined(vs))
+            .copied()
+            // 👇 heap allocation, maybe do something about this, past Timo!
+            .collect();
+        let new_rules: Vec<_> = self
+            .new_rules
+            .iter()
+            .filter(|vs| matcher.matches_inlined(vs))
+            .copied()
+            .collect();
+
+        //                       👇 the path values are very small, but
+        //                         I'm still cloning inside a hot loop
+        let mut path = self.path.clone();
+        matcher.add_step_inlined(&mut path);
+
+        DiffState {
+            path,
+            old_rules,
+            new_rules,
+        }
+    }
+```
+
+There are some inefficiencies visible here, and they're probably the most important spots for performance improvements.
+But they're still there as fixing them was too hard and/or time-consuming for me.
+
+My verdict is:
+
+I think it's a testament to the language that I could write an algorithm I could barely understand and get the performance to a state where the performance problems were caused by the amount of data I was intentionally creating and processing (instead of incidental inefficiencies).
+
+
+<!-- 
 ## Readability
 
 TODO remove this section, maybe move it into a followup article?
@@ -341,30 +429,44 @@ If you make a mistake and go one level too deep, you might loop over the leafs (
 In Rust, the whole thing was a bit better.
 I was still regularly completely out of my depth, but the reason I could even progress was that I had a machine checking whether I was really passing a `Conjunction<Disjunction<Term<Disjunction<T>>>>` to that function.
 
-TODO ranty? not sure. need to edit
+TODO ranty? not sure. need to edit -->
 
 ## Clojure vs Rust?
 
-Even though I might be a bit of a Rust fanboy, I don't want to be unfair against Clojure here.
+If it wasn't obvious before:
+I have become quite a Rust fan and it's my preferred language to think in now.
 
-I definitely missed the Clojure [REPL](https://clojure.org/guides/repl/introduction) and [Paredit](http://danmidwood.com/content/2014/11/21/animated-paredit.html) after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust[^paredit-rust].
-
-The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs.
+I definitely missed the Clojure [REPL](https://clojure.org/guides/repl/introduction) and [Paredit](http://danmidwood.com/content/2014/11/21/animated-paredit.html) after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust[^paredit-rust].  
+The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs[^rust-not-simple].
 
 Rust on the other hand is the most usable language that offers features that are otherwise only available in ML or Haskell.
-Writing Rust can sometimes feel as highlevel and productive as writing Kotlin[^rust-vs-kotlin], but with a more expressive type system and the option to go as low-level is I want.
+Writing Rust can sometimes feel [as high level and productive as writing Kotlin](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/), but with a more expressive type system, a higher performance ceiling and fewer runtime restrictions[^runtime].
 
-Nevertheless, my current preferences are: Rust for fun, keeping an eye open for opportunities where using Rust would be a clear improvement on the job, otherwise Kotlin.
+### And what happened to that diff tool?
+
+After switching to Rust, I had to implement more complicated logic that resolved dependencies between the rules I was diffing.
+This became complicated enough that even with a static type system I could only barely understand it.
+I doubt I would have been able to finish it in Clojure.
+
+In the end, I reached a stage where the tool seemed to work fine.
+I managed to improve the performance to acceptable levels and then stopped working on the tool.
+My colleagues who I wrote the tool for continued occasionally using it for over a year without any complaints.
+
+The whole system whose input my tool was diffing is (hopefully) going to be sundowned soon and the replacement system will offer a simpler way to analyse changes:  
+It will maintain a database counting the actual entities that exist, indexed by the fields that the rules apply to.
+
+My diff tool will be replaced by a database lookup and I am very happy about that.
 
 ----
 
 [^hooked-on-rust]: I was immediately hooked by the incredibly fast performance - which was initially mostly the difference between startup times and the respective excel parsing libraries.
 
-[^not-hating-on-clojure-tho]: I don't want to rip into Clojure here, after Rust and Kotlin it's my third favourite language.
+[^not-hating-on-clojure]: I'm not going to rip into Clojure here (after Rust and Kotlin it's my third favourite language).  
+I'm going to use a good language to show how great Rust is.
 
 [^insta-result]: This is a totally sensible design, but it means that I can only handle `instaparse` errors by using the `instaparse` [function `insta/failure?`](https://github.com/Engelberg/instaparse/blob/4d1903b059e77dc0049dfbc75af9dce995756148/README.md#parse-errors)
 
-[^rust-error-handling-links]: See [the Rust Book](https://doc.rust-lang.org/book/ch09-00-error-handling.html), [this blog post](https://blog.burntsushi.net/rust-error-handling/) by [ripgrep's](https://github.com/BurntSushi/ripgrep/) Andrew Gallant, [the error handling survey by Yoshua Wuyts](https://blog.yoshuawuyts.com/error-handling-survey/), [this blog post by Nick Groenen](https://nick.groenen.me/posts/rust-error-handling/) or [this talk by Jane Lusby](https://www.youtube.com/watch?v=rAF8mLI0naQ).
+[^rust-error-handling-links]: See [the Rust Book](https://doc.rust-lang.org/book/ch09-00-error-handling.html), [this artice](https://blog.burntsushi.net/rust-error-handling/) by [ripgrep's](https://github.com/BurntSushi/ripgrep/) Andrew Gallant, [the error handling survey by Yoshua Wuyts](https://blog.yoshuawuyts.com/error-handling-survey/), [this article by Nick Groenen](https://nick.groenen.me/posts/rust-error-handling/) or [this talk by Jane Lusby](https://www.youtube.com/watch?v=rAF8mLI0naQ).
 
 [^panic-ref]: There's also the [`panic` macro](https://doc.rust-lang.org/std/macro.panic.html) which works similar to exceptions in that it stops and unwinds your program, but unlike exceptions catching a panic is very rarely a good idea.
 
@@ -378,8 +480,16 @@ Nevertheless, my current preferences are: Rust for fun, keeping an eye open for 
 They are, as far as I can tell, very accurate and contain good advice.
 They also both discourage usual Clojure idioms or recommend less idiomatic alternatives.
 
+[^mutability-problems]: This caused many Java programmers to avoid passing mutable collections around.
+
+[^mutability-palatable]: Interestingly, some of my coworkers who are as much Kotlin fans as I am a Rust fan seem to have a much stronger aversion to mutability than me.
+
+[^borrow-redesign]: Some part of the code has to own the data to keep it alive while the hot loops use the references to it.
+
 [^paredit-rust]: [Rust-analyzer](https://rust-analyzer.github.io/manual.html#extend-selection) and [IntelliJ](https://www.jetbrains.com/help/idea/working-with-source-code.html#editor_code_selection) support semantic extend/shrink selection though, which is an important feature of Paredit.
 The slurp and barf features of Paredit probably don't make a lot of sense in languages without S-expressions anyway.
 
-[^rust-vs-kotlin]: See [this article](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/) by Aleksey Kladov for a more thorough comparison between Kotlin and Rust.
+[^rust-not-simple]: Some parts, like the part where I was abstracting over fields of a datastructure in the diff algorithm, are noticeably more painful in Rust.
+
+[^runtime]: Rust can be used in embedded systems, it can be compiled to WASM and it is very suitable for CLI tools where e.g. the JVM startup is painful.
 
