@@ -18,50 +18,6 @@ When I started writing Rust, reimplementing the existing Clojure code was among 
 I've continued learning Rust since then and have mostly stopped writing Clojure.  
 If things have changed in Clojure recently, please let me know and I'll update the article.
 
-<!-- 
-## Intro
-
-
-I was quite into Clojure a while ago and was looking for something to practice on.
-So I started writing something about some relatively complicated masterdata that some of my colleagues recently started to work with.
-
-I started writing some parsing and validation logic and exploring the domain.
-Inspired by some prod issues caused by accidental maintenance errors in this data
-(which was maintained in Excel sheets [link to the excel fails during the corona crisis])
-, I proposed writing a semantic differ to compare two versions of the excel sheet.
-This turned out to be the most algorithmically complicated program I have written so far.
-
-After getting the core diffing algorithm working, I regularly worked at improving its performance as early versions took many minutes to run.
-I learned how to profile my code using https://github.com/clojure-goes-fast/clj-async-profiler which helped find inefficiently implemented hot loops.
-I also redesigned the algorithm several times, allowing it to skip lots of work.
-A few times, profiling helped me find small issues that made enormous differences (which were usually silly mistakes)
-, but I quickly reached a point where improvements in the algorithm were the only way to realistically make the whole thing faster.
-
-I only worked on the project on the side, so these frequent redesigns forced me to regularly relearn parts of the codebase.
-I can now safely say that I prefer a statically typed language for complex algorithmic code.
-
-During this time I kept reading about Rust and made a mental note that I should try it out sometime.
-At some point I just went for it, wrote my first Hello World in Rust and started porting the Excel parsing logic of the Clojure program in Rust.
-Now this is probably caused by lots of things other than just the pure performance characteristics of Clojure/the JVM vs Rust
-, but when simply parsing the sheet took about 5 seconds in Clojure and 20ms in Rust, I was hooked.
-
-I continued learning the basics of Rust and tried to port the existing algorithm as directly as possible.
-Obviously, I was forced to redesign some parts, but in the beginning any redesign was made by necessity of the different paradigms between Clojure and Rust
-, not a better understanding of the problem domain.
-This stopped when I noticed a bug which actually made the old algorithm completely skip a few combinations of the input data, making its output a complete lie.
-Finding this bug was definitely helped by having to rewrite and understand my old code, but in this case, it actually caused a compiler warning or error.
-This was another situation where Rust won me over.
-
-There are a few specific differences I want to showcase, namely error handling
-, performance(FIXME I won't go deeper than anecdotal, so is the intro enough about performance?)
-and readability/the type system.
-
-Finally, I want to make some sweeping and completely subjective statements about those languages.
-
-I've stopped regularly lurking around the Clojure community around March 2019, so my judgements might be not completely up to date
-, looking at a recent (very good) article about clojure.spec (https://www.pixelated-noise.com/blog/2020/09/10/what-spec-is/#org6cf26d6)
-, it seems like there were no big changes. -->
-
 ## Error Handling
 
 The error handling requirements in this project were not very complicated.
@@ -395,41 +351,6 @@ But they're still there as fixing them was too hard and/or time-consuming for me
 My verdict is:
 
 I think it's a testament to the language that I could write an algorithm I could barely understand and get the performance to a state where the performance problems were caused by the amount of data I was intentionally creating and processing (instead of incidental inefficiencies).
-
-
-<!-- 
-## Readability
-
-TODO remove this section, maybe move it into a followup article?
-
-In Clojure, I designed my own little ad-hoc datatype patterns, but it was always hard to remember how they were shaped when I had to do something with one I hadn't touched in a while. (TODO needs example, maybe my error/log map?)
-The most sensible way to fix this would have been to introduce functions for this new "data type" that do everything i want to do with the type and never directly access the internals in any other place - exactly what Java/Rust are forcing me to do (that is, if the fields are private).
-Now I'm aware I'm admitting to a lack of personal discipline, but it's hard for me to future-proof my code when I can actually see in the REPL what the structure is, so I can just write code that directly uses it.
-
-In Rust on the other hand, this problem mostly goes away.
-It's just idiomatic to introduce types and then implement the things I want to do with them as methods on those types instead of freestanding functions somewhere else.
-Calling methods even looks nicer, so I am extra encouraged to write the code that uses the internals of a type near the definition of the type.
-This is only one of many details where Rust successfully designed a Pit of Success (https://blog.codinghorror.com/falling-into-the-pit-of-success/).
-
-Now, so far I've just been describing a very normal "slightly above trivial codebase + human memory = some design required to make it readable" situation.
-
-There was another reason why I was very happy to have a static type system again, and it was caused by the complexity of the data I was handling, which I could no longer fit in my head at once.
-See, each of the entries I was diffing had one field which was always a conjunctive normal form (https://en.wikipedia.org/wiki/Conjunctive_normal_form).
-What I had to do with that formula was replace each term with a Disjunction of other entries (this formula specified dependencies between entries, you see. I was not too happy with that design).
-
-The resulting data type was therefore a conjunction of disjunctions of terms (meaning this is negatable) of disjunctions of other rules.
-The term layer in there unfortunately prevented the easy flattening of two levels of Disjunctions.
-
-Now this might have just been me, but I was struggling to keep the current level I was operating on in my head while I was actually writing the code.
-Reading the code a few days later was even worse.
-Writing tests obviously helped, but it didn't make the problem go away.
-You can probably imagine that the code to process what is essentially several levels of nested lists consists of what is essentially nested loops.
-If you make a mistake and go one level too deep, you might loop over the leafs (which might give you a list of the key-value pairs of the rule object if it was a hashmap or a list of characters if it was a string).
-
-In Rust, the whole thing was a bit better.
-I was still regularly completely out of my depth, but the reason I could even progress was that I had a machine checking whether I was really passing a `Conjunction<Disjunction<Term<Disjunction<T>>>>` to that function.
-
-TODO ranty? not sure. need to edit -->
 
 ## Clojure vs Rust?
 
