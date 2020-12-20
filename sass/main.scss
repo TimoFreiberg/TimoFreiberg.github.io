@@ -1,0 +1,24 @@
+body {
+    font-size: 150%;
+}
+
+.footnote-definition-label {
+    float: left;
+    padding-right: 5px;
+}
+
+.footnote-definition-label::before {
+    content: "[";
+}
+
+.footnote-definition-label::after {
+    content: "]";
+}
+
+.zola-anchor {
+    font-size: 1.25rem;
+    margin-left: -2rem;
+    margin-right: 0.3rem;
+    position: relative;
+    top: -5px;
+}

@@ -1,6 +1,6 @@
 +++
 title = "I rewrote a Clojure program in Rust"
-date = 2020-12-13
+date = 2020-12-20
 +++
 
 About two years ago, I wrote a quite complicated diff tool in Clojure.  
@@ -32,8 +32,8 @@ Error handling in Clojure is not opinionated.
 , what error handling idioms exist in Clojure seem to me to be largely accidental or inherited from Java.
 
 The standard library mostly supports [exceptions](https://clojuredocs.org/clojure.core/ex-info).  
-There are some libraries that support returning error values instead of throwing exceptions like [the error handling library `failjure`](https://github.com/adambard/failjure).  
-Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom error values[^insta-result].
+There are some libraries that support returning error values instead of throwing exceptions like the error handling library [`failjure`](https://github.com/adambard/failjure).  
+Others, like the parsing library [`instaparse`](https://github.com/Engelberg/instaparse), return their own custom error values[^insta-result].
 
 I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
 
@@ -45,8 +45,12 @@ If any errors occur, all errors are aggregated into a string:
   [country-mapping data]
   (fail/attempt-all
    [headers (header-row data)
-    parsed (map #(parse-rule headers country-mapping %) (content-rows data))
-    failed-parses (->> parsed (filter fail/failed?) (map fail/message))
+    parsed (map
+             #(parse-rule headers country-mapping %)
+             (content-rows data))
+    failed-parses (->> parsed
+                    (filter fail/failed?)
+                    (map fail/message))
     parse-result (if (empty? failed-parses)
                    parsed
                    (fail/fail
@@ -62,7 +66,9 @@ If any errors occur, all errors are aggregated into a string:
    spec-result
    (fail/when-failed [failure]
                        (do
-                         (log/warn (str "Failed to parse data " data ":\n" (fail/message failure)))
+                         (log/warn
+                           (str "Failed to parse data "
+                             data ":\n" (fail/message failure)))
                          failure))))
 ```
 
@@ -96,7 +102,7 @@ Old tutorials and guides have therefore also become outdated.
 
 There are lots of good, up-to-date articles about error handling in Rust[^rust-error-handling-links], which help learn the current idioms.
 
-In Rust, functions that can error return the [`Result` type](https://doc.rust-lang.org/std/result/index.html)[^panic-ref].  
+In Rust, functions that can error return the [`Result`](https://doc.rust-lang.org/std/result/index.html) type[^panic-ref].  
 There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that's incompatible with the rest of the ecosystem.
 
 Let's look at the same function as before, but this time in Rust:
@@ -263,7 +269,7 @@ I could introduce wrapper types to make my type signatures more readable without
 I could use the functional [`Iterator` methods](https://doc.rust-lang.org/std/iter/trait.Iterator.html) like `map` and `filter` and get the same performance as if I was using imperative loops.
 
 I could also use mutability freely under the watchful eye of Rusts type system, which can both improve performance and make things more readable.
-Oldschool imperative/OO languages like Java allowed mutability everywhere, which often caused problems[^mutability-problems].
+Old-school imperative/OO languages like Java allowed mutability everywhere, which often caused problems[^mutability-problems].
 Functional languages like Haskell and Clojure then tried to solve the problems with mutability by removing mutability as much as possible.  
 Rust has surprised me by making mutability palatable again[^mutability-palatable].
 
@@ -273,39 +279,39 @@ Using references to a single instance of data can be wildly more performant, but
 Let's look at one of the functions in the medium-hot data normalization part again:
 
 ```rust 
-    //                  👇  mutability here! it's fine though
-    pub fn intersection(mut self, other: &Self) -> Option<Self> {
+//                  👇  mutability here! it's fine though
+pub fn intersection(mut self, other: &Self) -> Option<Self> {
 
-        match (self.$field.accepts_all(), other.$field.accepts_all()) {
-            // use the more restrictive field
-            (true, false) => {
-                *self.$field = other.$field.clone();
-            }
-            // self is more constrained, so we keep self
-            (false, true) => {}
-            // both accept everything, we can keep self
-            (true, true) => {}
-            // both are constrained, we need to calculate the intersection
-            (false, false) => {
-                let intersection = self.$field
-                    .into_iter()
-                    // 👇 functional iterator API
-                    .filter(|x| other.$field.contains(x))
-                    .collect::<Vec<_>>();
-
-                // empty intersection -> unsatisfiable
-                if intersection.is_empty() {
-                    // 👇 sometimes, imperative logic is nice!
-                    return None;
-                }
-                // 👇 mutability again
-                self.$field = intersection;
-            }
+    match (self.$field.accepts_all(), other.$field.accepts_all()) {
+        // use the more restrictive field
+        (true, false) => {
+            *self.$field = other.$field.clone();
         }
+        // self is more constrained, so we keep self
+        (false, true) => {}
+        // both accept everything, we can keep self
+        (true, true) => {}
+        // both are constrained, we need to calculate the intersection
+        (false, false) => {
+            let intersection = self.$field
+                .into_iter()
+                // 👇 functional iterator API
+                .filter(|x| other.$field.contains(x))
+                .collect::<Vec<_>>();
 
-        // if we didn't return None early, the field must be satisfiable!
-        Some(self)
+            // empty intersection -> unsatisfiable
+            if intersection.is_empty() {
+                // 👇 sometimes, imperative logic is nice!
+                return None;
+            }
+            // 👇 mutability again
+            self.$field = intersection;
+        }
     }
+
+    // if we didn't return None early, the field must be satisfiable!
+    Some(self)
+}
 ```
 
 Note the `$field` in the body - this was actually inside a macro definition!
@@ -315,37 +321,37 @@ Similar functions in the Clojure version just take a keyword argument.
 Let's now look at one of the hottest functions in the Rust implementation:
 
 ```rust
-    fn next_step<T: Debug + PartialEq + Ord + Hash, F: RuleField<'a, Item = T>>(
-        &self,
-        matcher: FieldMatcher<'a, T, F>,
-    ) -> Self {
-        //TODO according to heaptrack, this is a RAM hotspot. what do?
-        let old_rules: Vec<_> = self
-            .old_rules
-            .iter()
-            // 👇 this filter should be fast
-            .filter(|vs| matcher.matches_inlined(vs))
-            .copied()
-            // 👇 heap allocation, maybe do something about this, past Timo!
-            .collect();
-        let new_rules: Vec<_> = self
-            .new_rules
-            .iter()
-            .filter(|vs| matcher.matches_inlined(vs))
-            .copied()
-            .collect();
+fn next_step<T: Debug + PartialEq + Ord + Hash, F: RuleField<'a, Item = T>>(
+    &self,
+    matcher: FieldMatcher<'a, T, F>,
+) -> Self {
+    //TODO according to heaptrack, this is a RAM hotspot. what do?
+    let old_rules: Vec<_> = self
+        .old_rules
+        .iter()
+        // 👇 this filter should be fast
+        .filter(|vs| matcher.matches_inlined(vs))
+        .copied()
+        // 👇 heap allocation, maybe do something about this, past Timo!
+        .collect();
+    let new_rules: Vec<_> = self
+        .new_rules
+        .iter()
+        .filter(|vs| matcher.matches_inlined(vs))
+        .copied()
+        .collect();
 
-        //                       👇 the path values are very small, but
-        //                         I'm still cloning inside a hot loop
-        let mut path = self.path.clone();
-        matcher.add_step_inlined(&mut path);
+    //                       👇 the path values are very small, but
+    //                         I'm still cloning inside a hot loop
+    let mut path = self.path.clone();
+    matcher.add_step_inlined(&mut path);
 
-        DiffState {
-            path,
-            old_rules,
-            new_rules,
-        }
+    DiffState {
+        path,
+        old_rules,
+        new_rules,
     }
+}
 ```
 
 There are some inefficiencies visible here, and they're probably the most important spots for performance improvements.
@@ -366,7 +372,7 @@ The design approach of using a few elementary data structures for nearly everyth
 Rust on the other hand is the most usable language that offers features that are otherwise only available in ML or Haskell.
 Writing Rust can sometimes feel [as high level and productive as writing Kotlin](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/), but with a more expressive type system, a higher performance ceiling and fewer runtime restrictions[^runtime].
 
-### And what happened to that diff tool?
+## And what happened to that diff tool?
 
 After switching to Rust, I had to implement more complicated logic that resolved dependencies between the rules I was diffing.
 This became complicated enough that even with a static type system I could only barely understand it.
@@ -380,6 +386,8 @@ The whole system whose input my tool was diffing is (hopefully) going to be sund
 It will maintain a database counting the actual entities that exist, indexed by the fields that the rules apply to.
 
 My diff tool will be replaced by a database lookup and I am very happy about that.
+
+----
 
 ----
 
@@ -406,7 +414,7 @@ They also both discourage usual Clojure idioms or recommend less idiomatic alter
 
 [^mutability-problems]: This caused many Java programmers to avoid passing mutable collections around.
 
-[^mutability-palatable]: Interestingly, some of my coworkers who are as much Kotlin fans as I am a Rust fan seem to have a much stronger aversion to mutability than I do.
+[^mutability-palatable]: Interestingly, some of my coworkers who are as fond of Kotlin as I am of Rust seem to have a much stronger aversion to mutability than I do.
 
 [^borrow-redesign]: Some part of the code has to own the data to keep it alive while the hot loops use the references to it.
 
