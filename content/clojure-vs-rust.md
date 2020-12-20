@@ -21,34 +21,32 @@ If things have changed in Clojure recently, please let me know and I'll update t
 ## Error Handling
 
 The error handling requirements in this project were not very complicated.
-All errors just need to be logged and returned to the user.  
+All errors just needed to be logged and returned to the user.  
 The only slightly unusual requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
-, instead of just the first one, so I had to accumulate errors.
+(instead of just the first error) so I had to accumulate errors.
 
 ### Error Handling in Clojure
 
 Error handling in Clojure is not opinionated.  
 [Similar to error messages](https://lispcast.com/clojure-error-messages-accidental/)
-, what error handling idioms exist in the Clojure community seem to me to be largely accidental/inherited from Java.
+, what error handling idioms exist in Clojure seem to me to be largely accidental or inherited from Java.
 
 The standard library mostly supports [exceptions](https://clojuredocs.org/clojure.core/ex-info).  
 There are some libraries that support returning error values instead of throwing exceptions like [the error handling library `failjure`](https://github.com/adambard/failjure).  
-Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom result values[^insta-result].
+Others, like [the parsing library `instaparse`](https://github.com/Engelberg/instaparse), return their own custom error values[^insta-result].
 
 I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).
 
-Let's look at a Clojure function that parses and validates the input data, aggregating errors:
+Let's look at a Clojure function from my diff tool that uses [attempt-all](https://github.com/adambard/failjure#attempt-all) to parse and validate the input data.
+If any errors occur, all errors are aggregated into a string:
 
 ```clj
 (defn parse
   [country-mapping data]
   (fail/attempt-all
    [headers (header-row data)
-    parsed (map #(parse-rule headers country-mapping %)
-                (content-rows data))
-    failed-parses (->> parsed
-                       (filter fail/failed?)
-                       (map fail/message))
+    parsed (map #(parse-rule headers country-mapping %) (content-rows data))
+    failed-parses (->> parsed (filter fail/failed?) (map fail/message))
     parse-result (if (empty? failed-parses)
                    parsed
                    (fail/fail
@@ -56,10 +54,7 @@ Let's look at a Clojure function that parses and validates the input data, aggre
                                "Failed to parse "
                                (count failed-parses)
                                " rules:")]
-                      (apply merge-with #(str %1 "\n" %2)
-                             {:msg msg
-                              :log msg}
-                             failed-parses))))
+                      (str msg "\n" failed-parses))))
     spec-result (util/check-specs "Rules"
                                   :rule/id
                                   ::spec/rule
@@ -67,26 +62,28 @@ Let's look at a Clojure function that parses and validates the input data, aggre
    spec-result
    (fail/when-failed [failure]
                        (do
-                         (if-let [log (:log (fail/message failure))]
-                           (log/warn (str "Failed to parse data " data ":\n" log)))
+                         (log/warn (str "Failed to parse data " data ":\n" (fail/message failure)))
                          failure))))
 ```
 
 Nice things about this:
 
-* I can use fallible and infallible functions interchangeably (the call to `map` will never return an error).
+* The identifier-expression pairs in the square brackets use the same syntax as Clojure's [`let`-form](https://clojuredocs.org/clojure.core/let)
+    which makes it look familiar.
 * I can optionally add an error handling function to the very end, which is helpful to, e.g., log the argument of the function, as I did here.
 
 Not so nice things about this:
 
-* I can't see which functions can actually fail, I have to read them.
+* I can't see which functions can actually fail. I have to read them to find out.
 * Since the Clojure ecosystem doesn't have a uniform error handling style, I have to manually convert exceptions or other errors like `instaparse` error values to `failjure` errors.
 
 My verdict is:  
 Since Clojure is a Lisp, it's possible to use most kinds of error handling and make it look fine, if you really want to.
 The most pragmatic solution in most cases will be to use exceptions.
-I found that readability can suffer when errors are not handled explicitly, especially in a dynamic language.
-I was tempted to experiment with different approaches, which gave me some experience but also took more time than if Clojure was more opinionated about the way errors should be handled.
+
+I found that readability could suffer when using less explicit error handling, especially in a dynamic language.
+
+Due to the freedom of choice in error handling approacher, I was tempted to experiment more than with a more opinionated language.
 
 ### Error handling in Rust
 
@@ -138,11 +135,11 @@ pub fn parse(
 
 Nice things about this:
 
-* The standard library, every Rust library I've ever seen and my own application code is always using the same [`Result` type](https://doc.rust-lang.org/std/result/enum.Result.html), which keeps things pretty compatible.
-* [The `?` operator](https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html) makes the error handling visible but succinct.  
+* The standard library, every Rust library I've ever seen and my own application code is always using the same [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) type, which keeps things pretty compatible.
+* [The `?` operator](https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html) makes fallible functions visible but keeps it succinct.  
   It also automatically converts error types where possible, which reduces the need for manual type conversion.
-* The error type I'm using here from the [library `anyhow`](https://docs.rs/anyhow/*/anyhow/index.html) supports [a `.context` method](https://docs.rs/anyhow/*/anyhow/trait.Context.html), which makes otherwise unhelpful low-level errors usable.  
-  This is usually done in Exception-based languages by catching, wrapping and rethrowing exceptions, but this looks a lot more pleasant.
+* The error type I'm using here from the library [`anyhow`](https://docs.rs/anyhow/*/anyhow/index.html) supports a [`.context`](https://docs.rs/anyhow/*/anyhow/trait.Context.html) method, which gives otherwise unhelpful low-level errors the necessary context.  
+  This is usually done in exception-based languages by catching, wrapping and rethrowing, but this looks a lot more pleasant.
 
 Not so nice things about this:
 
@@ -156,7 +153,8 @@ In Rust, you will use the `Result` type and you will like it[^and-you'll-like-it
 The main design decisions are whether you use some of the helper libraries and how you design your error types.
 
 Designing the error types can be a challenge though, especially because it's a bit different than designing e.g. Java exception hierarchies.  
-I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me as I was not under time pressure and often worked in my spare time to learn. It might have been painful for teams maintaining bigger production systems.  
+I was lucky that keeping up to date with the evolving error handling idioms wasn't too hard for me as I was not under time pressure and often worked in my spare time with learning as my primary objective.
+It might have been painful for teams maintaining bigger production systems.  
 The large number of error handling tutorials and articles should hopefully make it easier to learn now than it was a few years ago.
 
 The learning curve aside:
@@ -164,16 +162,19 @@ To me, Rust's error handling feels like part of the secret sauce that makes it t
 
 ## Performance
 
-The part of the program that caused performance issues was the diff algorithm and, to a lesser extent, the data normalization step before that.  
-The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of data.
+The part of the program that caused performance issues was the diff algorithm and, to a slightly lesser extent, a data normalization step before that.  
+The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of temporary data.
 The large amount of data also often caused memory issues in both languages.
-Inefficiencies in the algorithm often caused both noticeable slowdowns and extreme memory issues at once.
 
 ### Clojure Performance
 
 In Clojure, making my code faster often meant making it less idiomatic.
-Many of Clojure's idioms and design approaches are discouraged when optimizing code for performance:  
-using destructuring, laziness, the lazy sequence API, or using the usual Clojure hashmap as the main datastructure in hot loops[^clojure-goes-fast].  
+Many of Clojure's idioms and design approaches are discouraged when optimizing code for performance[^clojure-goes-fast]:  
+* using destructuring
+* laziness
+* the lazy sequence API
+* using the usual Clojure hashmap as the main datastructure in hot loops.  
+
 In the end I always had more options available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.
 
 Let's look at one of the Clojure functions that were part of a medium-hot part of the program, where the input data was normalized:
@@ -198,6 +199,7 @@ Let's look at one of the Clojure functions that were part of a medium-hot part o
                           (map #(dissoc % :eq?))))
         diff (field-diff-fn rule-must-be-equal-operations)
         mergeable-diff (field-diff-fn mergeable-rule-operations)]
+ #_"👇 a hashmap used in a (medium)-hot loop"
     {:rule1 rule1
      :rule2 rule2
      :diff diff
@@ -236,8 +238,9 @@ and here's one from the hottest part, where the data was diffed by one of its fi
                       :rules (set (get key->rules1 k))}))))
 ```
 
-So there are some obvious inefficiencies that might be worth it to change, great!
-Unfortunately, doing that will make small details a bit uglier (when removing destructuring or the [for expressions](https://clojuredocs.org/clojure.core/for)) or require lots of additional changes (when replacing the hashmaps with records, for example).
+So there are some obvious inefficiencies that might be worth it to change, great!  
+Unfortunately, doing that will make small details a bit uglier (when removing destructuring or the [`for`](https://clojuredocs.org/clojure.core/for) expressions).
+Introducing records to replace all the little hashmaps with something faster would be a drop-in replacement, which is nice.
 
 My verdict is:
 
@@ -251,7 +254,7 @@ So let's look at Rust:
 
 ### Rust Performance
 
-One of Rust's design goals was performance, and it [can](https://kornel.ski/rust-c-speed) [compete](https://github.com/ixy-languages/ixy-languages/blob/master/Rust-vs-C-performance.md) with C.  
+One of Rust's design goals was performance, and it [can](https://kornel.ski/rust-c-speed) [compete](https://github.com/ixy-languages/ixy-languages/blob/master/Rust-vs-C-performance.md) with C, so I guess that means it succeeded.  
 But this doesn't automatically make my program the fastest - I can write slow code in any language!  
 What was more interesting to me was how fast my program was going to be if I got it working and then spent one or two motivated weekends optimizing as best as I could.
 
@@ -380,10 +383,10 @@ My diff tool will be replaced by a database lookup and I am very happy about tha
 
 ----
 
-[^hooked-on-rust]: I was immediately hooked by the incredibly fast performance - which was initially mostly the difference between startup times and the respective excel parsing libraries.
+[^hooked-on-rust]: I was immediately hooked by the incredibly fast performance - which was initially mostly the difference between startup times and the respective excel parsing libraries, [docjure](https://github.com/mjul/docjure) and [calamine](https://github.com/tafia/calamine/).
 
-[^not-hating-on-clojure]: I'm not going to rip into Clojure here (after Rust and Kotlin it's my third favourite language).  
-I'm going to use a good language to show how great Rust is.
+[^not-hating-on-clojure]: I'm not trying to rip into Clojure here (after Rust and Kotlin it's my third favourite language).  
+I'm trying to show how great Rust is by comparing it to a very good language.
 
 [^insta-result]: This is a totally sensible design, but it means that I can only handle `instaparse` errors by using the `instaparse` [function `insta/failure?`](https://github.com/Engelberg/instaparse/blob/4d1903b059e77dc0049dfbc75af9dce995756148/README.md#parse-errors)
 
@@ -403,7 +406,7 @@ They also both discourage usual Clojure idioms or recommend less idiomatic alter
 
 [^mutability-problems]: This caused many Java programmers to avoid passing mutable collections around.
 
-[^mutability-palatable]: Interestingly, some of my coworkers who are as much Kotlin fans as I am a Rust fan seem to have a much stronger aversion to mutability than me.
+[^mutability-palatable]: Interestingly, some of my coworkers who are as much Kotlin fans as I am a Rust fan seem to have a much stronger aversion to mutability than I do.
 
 [^borrow-redesign]: Some part of the code has to own the data to keep it alive while the hot loops use the references to it.
 
