@@ -43,27 +43,37 @@ If any errors occur, all errors are aggregated into a string:
 ```clj
 (defn parse
   [country-mapping data]
+  #_"   👇 the attempt-all function exits early 
+           if any binding returned a failure"
   (fail/attempt-all
    [headers (header-row data)
     parsed (map
              #(parse-rule headers country-mapping %)
              (content-rows data))
+    #_"           👇 list of failures is aggregated here"
     failed-parses (->> parsed
                     (filter fail/failed?)
                     (map fail/message))
+    #_"          👇 this can return a failure,
+                    triggering an early exit"
     parse-result (if (empty? failed-parses)
                    parsed
+                   #_"👇 a single failure value containing the
+                         list of failures concatenated into a string"
                    (fail/fail
                     (let [msg (str
                                "Failed to parse "
                                (count failed-parses)
                                " rules:")]
                       (str msg "\n" failed-parses))))
+    #_"          👇 This can also return a failure"
     spec-result (util/check-specs "Rules"
                                   :rule/id
                                   ::spec/rule
                                   parse-result)]
+   #_"👇 if everything was successful, this is returned"
    spec-result
+   #_"👇 if any failure occurred, this is returned"
    (fail/when-failed [failure]
                        (do
                          (log/warn
@@ -114,26 +124,38 @@ pub fn parse(
 ) -> Result<Vec<Rule>> {
     let range = workbook
         .worksheet_range("Rules")
+        // this question mark triggers an early exit
+        // there are two because we have an Option
+        // containing a Result                    👇
         .ok_or(format_err!("Missing Rules sheet"))??;
+        //                               👇
     let range = skip_to_header_row(range)?;
     let parsed = RangeDeserializerBuilder::new()
         .has_headers(true)
         .from_range(&range)
+        //                                    👇
         .context("Failed to read Rules sheet")?;
     let rules = collect_errs(parsed.map(|parse_result| {
         parse_result
+            // 👇 mapping a lambda over the error value
             .map_err(|e| e.into())
+            // 👇 this would be called flatMap in some other languages
             .and_then(|row| row.parse(&country_mapping))
     }))
+    // 👇 this converts a list of errors into a single error
+    //    containing a string
     .map_err(|es| {
         format_err!(
             "Failed to parse {} rules:\n{}",
             es.len(),
+            // 👇 very elegant...
+            //    this would just be one .joinToString call in Kotlin
             es.into_iter()
                 .map(|e| e.to_string())
                 .collect::<Vec<_>>()
                 .join("\n")
         )
+   // 👇
     })?;
     Ok(rules)
 }
@@ -294,10 +316,7 @@ pub fn intersection(mut self, other: &Self) -> Option<Self> {
         // both are constrained, we need to calculate the intersection
         (false, false) => {
             let intersection = self.$field
-                .into_iter()
-                // 👇 functional iterator API
-                .filter(|x| other.$field.contains(x))
-                .collect::<Vec<_>>();
+                .intersection(&other.$field);
 
             // empty intersection -> unsatisfiable
             if intersection.is_empty() {
@@ -321,18 +340,19 @@ Similar functions in the Clojure version just take a keyword argument.
 Let's now look at one of the hottest functions in the Rust implementation:
 
 ```rust
-fn next_step<T: Debug + PartialEq + Ord + Hash, F: RuleField<'a, Item = T>>(
+fn next_step<T: Eq + Ord + Hash, F: RuleField<'a, Item = T>>(
     &self,
     matcher: FieldMatcher<'a, T, F>,
 ) -> Self {
-    //TODO according to heaptrack, this is a RAM hotspot. what do?
+    // TODO according to heaptrack, this is a RAM hotspot. what do?
     let old_rules: Vec<_> = self
         .old_rules
         .iter()
         // 👇 this filter should be fast
         .filter(|vs| matcher.matches_inlined(vs))
         .copied()
-        // 👇 heap allocation, maybe do something about this, past Timo!
+        // 👇 heap allocation
+        //    how about you do something about this, past Timo!
         .collect();
     let new_rules: Vec<_> = self
         .new_rules
@@ -372,6 +392,9 @@ The design approach of using a few elementary data structures for nearly everyth
 Rust on the other hand is the most usable language that offers features that are otherwise only available in ML or Haskell.
 Writing Rust can sometimes feel [as high level and productive as writing Kotlin](https://ferrous-systems.com/blog/rust-as-productive-as-kotlin/), but with a more expressive type system, a higher performance ceiling and fewer runtime restrictions[^runtime].
 
+It's ownership and mutability tracking features also really help writing [correct software](https://fasterthanli.me/articles/aiming-for-correctness-with-types)
+, and I miss those features in other languages.
+
 ## And what happened to that diff tool?
 
 After switching to Rust, I had to implement more complicated logic that resolved dependencies between the rules I was diffing.
@@ -406,7 +429,7 @@ I'm trying to show how great Rust is by comparing it to a very good language.
 
 [^try-blocks]: I can't wait for [`try` blocks](https://doc.rust-lang.org/nightly/unstable-book/language-features/try-blocks.html) to be stabilized.
 
-[^and-you'll-like-it]: Seriously, it's quite popular.
+[^and-you'll-like-it]: Seriously, it's actually quite popular.
 
 [^clojure-goes-fast]: See [these](https://tech.redplanetlabs.com/2020/09/02/clojure-faster/) [articles](http://clojure-goes-fast.com/blog/java-arrays-and-unchecked-math/) on how to improve Clojure performance.
 They are, as far as I can tell, very accurate and contain good advice.
