@@ -1,5 +1,5 @@
 +++
-title = "I rewrote a Clojure program in Rust"
+title = "I rewrote a Clojure tool in Rust"
 date = 2020-12-20
 +++
 
