@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://timofreiberg.github.io/sitemap.xml
