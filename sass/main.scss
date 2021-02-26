@@ -1,5 +1,5 @@
 body {
-    font-size: 150%;
+    font-size: 120%;
 }
 
 .footnote-definition-label {
@@ -21,4 +21,15 @@ body {
     margin-right: 0.3rem;
     position: relative;
     top: -5px;
+}
+
+.article-metadata {
+    font-style: italic;
+    margin: 0px;
+    font-size: 90%;
+}
+
+.article-header {
+    margin-top: 0px;
+    margin-bottom: 30px;
 }

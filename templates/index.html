@@ -1,12 +1,40 @@
-{% extends "base.html" %}
+{% set css = load_data(path="public/main.css") %}
 
-{% block content %}
-<h1 class="title">
-    Timo's Blog
-</h1>
-<ul>
-    {% for page in section.pages %}
-    <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
-    {% endfor %}
-</ul>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        {{ css | safe  }}
+    </style> 
+    {%- block header %}
+    <title>Timo's Blog</title>
+    {%- endblock header %}
+    <link rel="canonical" href="{{ current_url | safe }}" />
+    <link href="/rss.xml" rel="alternate" type="application/rss+xml" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
+
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+            {% block content %}
+            <h1>{{ section.title }}</h1>
+            <div class="articles">
+                {% for page in section.pages %}
+                <article>
+                    <p class="article-metadata">{{ page.date }} </p>
+                    <a href="{{ page.permalink | safe }}">
+                        <h2 class="article-header">{{ page.title }}</h1>
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+            {% endblock content %}
+        </div>
+    </section>
+</body>
+
+</html>
