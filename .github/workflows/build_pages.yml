@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checkout
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v4
     # Build & deploy
     - name: shalzz/zola-deploy-action
-      uses: shalzz/zola-deploy-action@v0.12.0
+      uses: shalzz/zola-deploy-action@v0.21.0
       env:
         # Target branch
         PAGES_BRANCH: gh-pages
