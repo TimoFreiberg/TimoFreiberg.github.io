@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title></title>
+      <link>https://timofreiberg.com/</link>
+      <description></description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://timofreiberg.com/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Thu, 18 Mar 2021 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>The Case for the Typestate Pattern - The Typestate Pattern itself</title>
+          <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://timofreiberg.com/typestate-2/</link>
+          <guid>https://timofreiberg.com/typestate-2/</guid>
+          <description xml:base="https://timofreiberg.com/typestate-2/">&lt;p&gt;I continued my series about the typestate pattern &lt;a href=&quot;https:&#x2F;&#x2F;www.novatec-gmbh.de&#x2F;en&#x2F;blog&#x2F;the-case-for-the-typestate-pattern-the-typestate-pattern-itself&#x2F;&quot;&gt;at my companies blog&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>The Case for the Typestate Pattern - Introducing Algebraic Data Types</title>
+          <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://timofreiberg.com/typestate-1/</link>
+          <guid>https://timofreiberg.com/typestate-1/</guid>
+          <description xml:base="https://timofreiberg.com/typestate-1/">&lt;p&gt;I wrote something about the typestate pattern &lt;a href=&quot;https:&#x2F;&#x2F;www.novatec-gmbh.de&#x2F;en&#x2F;blog&#x2F;the-case-for-the-typestate-pattern-introducing-algebraic-data-types&#x2F;&quot;&gt;at my companies blog&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>It&#x27;s really easy to make a website</title>
+          <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://timofreiberg.com/easy-site/</link>
+          <guid>https://timofreiberg.com/easy-site/</guid>
+          <description xml:base="https://timofreiberg.com/easy-site/">&lt;p&gt;I created this site in late 2020, using &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;pages.github.com&#x2F;&quot;&gt;Github Pages&lt;&#x2F;a&gt;.&lt;br &#x2F;&gt;
+I have long been admiring people that regularly write interesting articles (e.g. &lt;a href=&quot;https:&#x2F;&#x2F;fasterthanli.me&quot;&gt;https:&#x2F;&#x2F;fasterthanli.me&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;christine.website&#x2F;&quot;&gt;https:&#x2F;&#x2F;christine.website&#x2F;&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;endler.dev&#x2F;&quot;&gt;https:&#x2F;&#x2F;endler.dev&#x2F;&lt;&#x2F;a&gt;, not exhaustive of course), but I struggled to find the motivation and courage to write something myself.&lt;&#x2F;p&gt;
+&lt;p&gt;Then, last year, my good friend &lt;a href=&quot;https:&#x2F;&#x2F;andrewru.com&#x2F;&quot;&gt;Andre&lt;&#x2F;a&gt; started pushing me to start writing and actually succeeded, which amazed me more than anyone else...
+I didn&#x27;t put much effort into the site so far (as you can see), but I was quite happy with the experience I had using Zola and Github Pages&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, he recently created his own site and put it on his own domain - which is something I put off for a while because I didn&#x27;t want to enter another rabbit hole.
+But seeing that he just got his own domain, I figured I could just ask him where he got it and try it.&lt;&#x2F;p&gt;
+&lt;p&gt;I did that, he gave me the name of a popular registrar, I tried it out, and 30 minutes later my blog was reachable under my own domain.
+This was a really pleasant surprise to me as I really did not expect anything even remotely related to DNS to go that smoothly.&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, the point of this post is to encourage you to make your own site and&#x2F;or get your own domain&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#encouragement-disclaimer&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;!
+Feel free to use something more mainstream if you want to&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#rustacean&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, but Zola worked very well for me and I&#x27;m quite happy with its documentation&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#zola-docs&quot;&gt;3&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; as well.&lt;&#x2F;p&gt;
+&lt;p&gt;The web really needs more personal websites.
+Make your own.
+And make it like &lt;a href=&quot;https:&#x2F;&#x2F;fasterthanli.me&quot;&gt;Amos&#x27;&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;christine.website&#x2F;&quot;&gt;Christine&#x27;s&lt;&#x2F;a&gt; or &lt;a href=&quot;https:&#x2F;&#x2F;endler.dev&#x2F;&quot;&gt;Matthias&#x27;&lt;&#x2F;a&gt;, not like mine 😅&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;encouragement-disclaimer&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;at least if you&#x27;ve just been putting it off because it sounded like a hassle to you, like I have&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;rustacean&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;2&lt;&#x2F;sup&gt;
+&lt;p&gt;I just chose Zola because I&#x27;m a big ol Rustacean&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;zola-docs&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;3&lt;&#x2F;sup&gt;
+&lt;p&gt;See the &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;deployment&#x2F;github-pages&#x2F;&quot;&gt;Github Pages guide&lt;&#x2F;a&gt; and the &lt;a href=&quot;https:&#x2F;&#x2F;docs.github.com&#x2F;en&#x2F;github&#x2F;working-with-github-pages&#x2F;configuring-a-custom-domain-for-your-github-pages-site&quot;&gt;custom domain guide&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+</description>
+      </item>
+      <item>
+          <title>I rewrote a Clojure tool in Rust</title>
+          <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://timofreiberg.com/clojure-vs-rust/</link>
+          <guid>https://timofreiberg.com/clojure-vs-rust/</guid>
+          <description xml:base="https://timofreiberg.com/clojure-vs-rust/">&lt;p&gt;About two years ago, I wrote a quite complicated diff tool in Clojure.&lt;br &#x2F;&gt;
+It was complicated enough that I struggled to fit the algorithm in my head and the inputs were large enough that I had to make some efforts to improve performance.&lt;&#x2F;p&gt;
+&lt;p&gt;About half a year later, I started learning Rust, ported the current state of the Clojure program into Rust, was very happy with the change&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#hooked-on-rust&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; and continued exclusively with Rust.&lt;br &#x2F;&gt;
+While working on that project, I&#x27;ve developed some opinions about the two languages, especially about error handling and performance:&lt;&#x2F;p&gt;
+&lt;p&gt;I think that these are areas where Rust excels, while they are among the weaker spots of Clojure&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#not-hating-on-clojure&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;To put my experience in context:
+I had a bit more than one year of experience in Clojure when I moved to Rust.
+The diff tool was by far the largest Clojure program I&#x27;ve ever written, and it was only about 3000 lines.&lt;br &#x2F;&gt;
+When I started writing Rust, reimplementing the existing Clojure code was among my first Rust code.
+I&#x27;ve continued learning Rust since then and have mostly stopped writing Clojure.&lt;br &#x2F;&gt;
+If things have changed in Clojure recently, please let me know and I&#x27;ll update the article.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;error-handling&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#error-handling&quot; aria-label=&quot;Anchor link for: error-handling&quot;&gt;🔗&lt;&#x2F;a&gt;Error Handling&lt;&#x2F;h2&gt;
+&lt;p&gt;The error handling requirements in this project were not very complicated.
+All errors just needed to be logged and returned to the user.&lt;br &#x2F;&gt;
+The only slightly unusual requirement was that parsing and validation logic should show all errors for each row in both uploaded excel files
+(instead of just the first error) so I had to accumulate errors.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;error-handling-in-clojure&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#error-handling-in-clojure&quot; aria-label=&quot;Anchor link for: error-handling-in-clojure&quot;&gt;🔗&lt;&#x2F;a&gt;Error Handling in Clojure&lt;&#x2F;h3&gt;
+&lt;p&gt;Error handling in Clojure is not opinionated.&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;lispcast.com&#x2F;clojure-error-messages-accidental&#x2F;&quot;&gt;Similar to error messages&lt;&#x2F;a&gt;
+, what error handling idioms exist in Clojure seem to me to be largely accidental or inherited from Java.&lt;&#x2F;p&gt;
+&lt;p&gt;The standard library mostly supports &lt;a href=&quot;https:&#x2F;&#x2F;clojuredocs.org&#x2F;clojure.core&#x2F;ex-info&quot;&gt;exceptions&lt;&#x2F;a&gt;.&lt;br &#x2F;&gt;
+There are some libraries that support returning error values instead of throwing exceptions like the error handling library &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;adambard&#x2F;failjure&quot;&gt;&lt;code&gt;failjure&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;.&lt;br &#x2F;&gt;
+Others, like the parsing library &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Engelberg&#x2F;instaparse&quot;&gt;&lt;code&gt;instaparse&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, return their own custom error values&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#insta-result&quot;&gt;3&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I used failjure to help accumulate errors in a nicer way (and because it appealed to my Haskell-influenced taste).&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s look at a Clojure function from my diff tool that uses &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;adambard&#x2F;failjure#attempt-all&quot;&gt;attempt-all&lt;&#x2F;a&gt; to parse and validate the input data.
+If any errors occur, all errors are aggregated into a string:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clj&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-clj &quot;&gt;&lt;code class=&quot;language-clj&quot; data-lang=&quot;clj&quot;&gt;&lt;span&gt;(defn parse
+&lt;&#x2F;span&gt;&lt;span&gt;  [country-mapping data]
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;   👇 the attempt-all function exits early 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;           if any binding returned a failure&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  (fail&#x2F;attempt-all
+&lt;&#x2F;span&gt;&lt;span&gt;   [headers (header-row data)
+&lt;&#x2F;span&gt;&lt;span&gt;    parsed (map
+&lt;&#x2F;span&gt;&lt;span&gt;             #(parse-rule headers country-mapping %)
+&lt;&#x2F;span&gt;&lt;span&gt;             (content-rows data))
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;           👇 list of failures is aggregated here&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    failed-parses (-&amp;gt;&amp;gt; parsed
+&lt;&#x2F;span&gt;&lt;span&gt;                    (filter fail&#x2F;failed?)
+&lt;&#x2F;span&gt;&lt;span&gt;                    (map fail&#x2F;message))
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;          👇 this can return a failure,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;                    triggering an early exit&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    parse-result (if (empty? failed-parses)
+&lt;&#x2F;span&gt;&lt;span&gt;                   parsed
+&lt;&#x2F;span&gt;&lt;span&gt;                   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 a single failure value containing the
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;                         list of failures concatenated into a string&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                   (fail&#x2F;fail
+&lt;&#x2F;span&gt;&lt;span&gt;                    (let [msg (str
+&lt;&#x2F;span&gt;&lt;span&gt;                               &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Failed to parse &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                               (count failed-parses)
+&lt;&#x2F;span&gt;&lt;span&gt;                               &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt; rules:&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)]
+&lt;&#x2F;span&gt;&lt;span&gt;                      (str msg &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; failed-parses))))
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;          👇 This can also return a failure&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    spec-result (util&#x2F;check-specs &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Rules&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:rule&#x2F;id
+&lt;&#x2F;span&gt;&lt;span&gt;                                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;::spec&#x2F;rule
+&lt;&#x2F;span&gt;&lt;span&gt;                                  parse-result)]
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 if everything was successful, this is returned&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;   spec-result
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 if any failure occurred, this is returned&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;   (fail&#x2F;when-failed [failure]
+&lt;&#x2F;span&gt;&lt;span&gt;                       (do
+&lt;&#x2F;span&gt;&lt;span&gt;                         (log&#x2F;warn
+&lt;&#x2F;span&gt;&lt;span&gt;                           (str &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Failed to parse data &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                             data &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; (fail&#x2F;message failure)))
+&lt;&#x2F;span&gt;&lt;span&gt;                         failure))))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Nice things about this:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;The identifier-expression pairs in the square brackets use the same syntax as Clojure&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;clojuredocs.org&#x2F;clojure.core&#x2F;let&quot;&gt;&lt;code&gt;let&lt;&#x2F;code&gt;-form&lt;&#x2F;a&gt;
+which makes it look familiar.&lt;&#x2F;li&gt;
+&lt;li&gt;I can optionally add an error handling function to the very end, which is helpful to, e.g., log the argument of the function, as I did here.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Not so nice things about this:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;I can&#x27;t see which functions can actually fail. I have to read them to find out.&lt;&#x2F;li&gt;
+&lt;li&gt;Since the Clojure ecosystem doesn&#x27;t have a uniform error handling style, I have to manually convert exceptions or other errors like &lt;code&gt;instaparse&lt;&#x2F;code&gt; error values to &lt;code&gt;failjure&lt;&#x2F;code&gt; errors.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;My verdict is:&lt;br &#x2F;&gt;
+Since Clojure is a Lisp, it&#x27;s possible to use most kinds of error handling and make it look fine, if you really want to.
+The most pragmatic solution in most cases will be to use exceptions.&lt;&#x2F;p&gt;
+&lt;p&gt;I found that readability could suffer when using less explicit error handling, especially in a dynamic language.&lt;&#x2F;p&gt;
+&lt;p&gt;Due to the freedom of choice in error handling approacher, I was tempted to experiment more than with a more opinionated language.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;error-handling-in-rust&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#error-handling-in-rust&quot; aria-label=&quot;Anchor link for: error-handling-in-rust&quot;&gt;🔗&lt;&#x2F;a&gt;Error handling in Rust&lt;&#x2F;h3&gt;
+&lt;p&gt;Rust is quite opinionated about error handling.
+The Rust community has worked on developing and improving common idioms, some of which were incorporated into the standard library, thereby improving the baseline error handling.&lt;&#x2F;p&gt;
+&lt;p&gt;There&#x27;s no improvement without change though, and the frequent changes have been a source of complaints.
+While backwards compatibility was never broken, people that wanted their code to be idiomatic had to update it anyway.
+Old tutorials and guides have therefore also become outdated.&lt;&#x2F;p&gt;
+&lt;p&gt;There are lots of good, up-to-date articles about error handling in Rust&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#rust-error-handling-links&quot;&gt;4&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, which help learn the current idioms.&lt;&#x2F;p&gt;
+&lt;p&gt;In Rust, functions that can error return the &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;result&#x2F;index.html&quot;&gt;&lt;code&gt;Result&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; type&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#panic-ref&quot;&gt;5&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;br &#x2F;&gt;
+There are several libraries that make creating your own errors or handling errors from libraries easier, but they (mostly) just use the types from the standard library instead of introducing new stuff that&#x27;s incompatible with the rest of the ecosystem.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s look at the same function as before, but this time in Rust:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;parse&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;workbook&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mut&lt;&#x2F;span&gt;&lt;span&gt; Workbook,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;country_mapping&lt;&#x2F;span&gt;&lt;span&gt;: CountryMapping,
+&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; Result&amp;lt;Vec&amp;lt;Rule&amp;gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; range = workbook
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;worksheet_range&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Rules&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; this question mark triggers an early exit
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; there are two because we have an Option
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; containing a Result                    👇
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;ok_or&lt;&#x2F;span&gt;&lt;span&gt;(format_err!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Missing Rules sheet&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;))??;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;                               👇
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; range = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;skip_to_header_row&lt;&#x2F;span&gt;&lt;span&gt;(range)?;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; parsed = RangeDeserializerBuilder::new()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;has_headers&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;from_range&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;range)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;                                    👇
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;context&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Failed to read Rules sheet&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)?;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; rules = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;collect_errs&lt;&#x2F;span&gt;&lt;span&gt;(parsed.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;parse_result&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;        parse_result
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 mapping a lambda over the error value
+&lt;&#x2F;span&gt;&lt;span&gt;            .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;map_err&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span&gt;| e.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;into&lt;&#x2F;span&gt;&lt;span&gt;())
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 this would be called flatMap in some other languages
+&lt;&#x2F;span&gt;&lt;span&gt;            .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;and_then&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;row&lt;&#x2F;span&gt;&lt;span&gt;| row.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;parse&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;country_mapping))
+&lt;&#x2F;span&gt;&lt;span&gt;    }))
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 this converts a list of errors into a single error
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;    containing a string
+&lt;&#x2F;span&gt;&lt;span&gt;    .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;map_err&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;es&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;        format_err!(
+&lt;&#x2F;span&gt;&lt;span&gt;            &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Failed to parse {} rules:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;,
+&lt;&#x2F;span&gt;&lt;span&gt;            es.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 very elegant...
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;    this would just be one .joinToString call in Kotlin
+&lt;&#x2F;span&gt;&lt;span&gt;            es.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;into_iter&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;                .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span&gt;| e.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;())
+&lt;&#x2F;span&gt;&lt;span&gt;                .collect::&amp;lt;Vec&amp;lt;_&amp;gt;&amp;gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;                .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;join&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;        )
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇
+&lt;&#x2F;span&gt;&lt;span&gt;    })?;
+&lt;&#x2F;span&gt;&lt;span&gt;    Ok(rules)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Nice things about this:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;The standard library, every Rust library I&#x27;ve ever seen and my own application code is always using the same &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;result&#x2F;enum.Result.html&quot;&gt;&lt;code&gt;Result&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; type, which keeps things pretty compatible.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;edition-guide&#x2F;rust-2018&#x2F;error-handling-and-panics&#x2F;the-question-mark-operator-for-easier-error-handling.html&quot;&gt;The &lt;code&gt;?&lt;&#x2F;code&gt; operator&lt;&#x2F;a&gt; makes fallible functions visible but keeps it succinct.&lt;br &#x2F;&gt;
+It also automatically converts error types where possible, which reduces the need for manual type conversion.&lt;&#x2F;li&gt;
+&lt;li&gt;The error type I&#x27;m using here from the library &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;anyhow&#x2F;*&#x2F;anyhow&#x2F;index.html&quot;&gt;&lt;code&gt;anyhow&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; supports a &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;anyhow&#x2F;*&#x2F;anyhow&#x2F;trait.Context.html&quot;&gt;&lt;code&gt;.context&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; method, which gives otherwise unhelpful low-level errors the necessary context.&lt;br &#x2F;&gt;
+This is usually done in exception-based languages by catching, wrapping and rethrowing, but this looks a lot more pleasant.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Not so nice things about this:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;I have to keep the error types compatible, which I accomplish in this case by not distinguishing between different error types at all&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#anyhow-usecase&quot;&gt;6&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;br &#x2F;&gt;
+I still have to return a single error value, which means I have to manually and verbosely convert the list of errors into a single one - in this case a newline-delimited string.&lt;&#x2F;li&gt;
+&lt;li&gt;If I want to log something when this entire function returns an error or add some &lt;code&gt;.context&lt;&#x2F;code&gt; to it, I would like to have the equivalent of a &lt;code&gt;try&#x2F;catch&lt;&#x2F;code&gt;-block around the entire function body.&lt;br &#x2F;&gt;
+This doesn&#x27;t exist yet&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#try-blocks&quot;&gt;7&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, the current best practice seems to be do move the entire body into an inner function or lambda.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;My verdict is:&lt;br &#x2F;&gt;
+In Rust, you will use the &lt;code&gt;Result&lt;&#x2F;code&gt; type and you will like it&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#and-you&amp;#39;ll-like-it&quot;&gt;8&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;br &#x2F;&gt;
+The main design decisions are whether you use some of the helper libraries and how you design your error types.&lt;&#x2F;p&gt;
+&lt;p&gt;Designing the error types can be a challenge though, especially because it&#x27;s a bit different than designing e.g. Java exception hierarchies.&lt;br &#x2F;&gt;
+I was lucky that keeping up to date with the evolving error handling idioms wasn&#x27;t too hard for me as I was not under time pressure and often worked in my spare time with learning as my primary objective.
+It might have been painful for teams maintaining bigger production systems.&lt;br &#x2F;&gt;
+The large number of error handling tutorials and articles should hopefully make it easier to learn now than it was a few years ago.&lt;&#x2F;p&gt;
+&lt;p&gt;The learning curve aside:
+To me, Rust&#x27;s error handling feels like part of the secret sauce that makes it the most promising language for correctness that I know of.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;performance&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#performance&quot; aria-label=&quot;Anchor link for: performance&quot;&gt;🔗&lt;&#x2F;a&gt;Performance&lt;&#x2F;h2&gt;
+&lt;p&gt;The part of the program that caused performance issues was the diff algorithm and, to a slightly lesser extent, a data normalization step before that.&lt;br &#x2F;&gt;
+The type of performance problems I had were mostly being CPU bound, having to generate and compare a lot of temporary data.
+The large amount of data also often caused memory issues in both languages.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;clojure-performance&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#clojure-performance&quot; aria-label=&quot;Anchor link for: clojure-performance&quot;&gt;🔗&lt;&#x2F;a&gt;Clojure Performance&lt;&#x2F;h3&gt;
+&lt;p&gt;In Clojure, making my code faster often meant making it less idiomatic.
+Many of Clojure&#x27;s idioms and design approaches are discouraged when optimizing code for performance&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#clojure-goes-fast&quot;&gt;9&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;using destructuring&lt;&#x2F;li&gt;
+&lt;li&gt;laziness&lt;&#x2F;li&gt;
+&lt;li&gt;the lazy sequence API&lt;&#x2F;li&gt;
+&lt;li&gt;using the usual Clojure hashmap as the main datastructure in hot loops.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;In the end I always had more options available - maybe even writing the hot part in Java - but many of these options would have made the code a lot less pretty.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s look at one of the Clojure functions that were part of a medium-hot part of the program, where the input data was normalized:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clojure&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-clojure &quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;defn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;rule-field-diff
+&lt;&#x2F;span&gt;&lt;span&gt;  [rule1 rule2]
+&lt;&#x2F;span&gt;&lt;span&gt;  (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;[field-diff-fn (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span&gt;[operations]
+&lt;&#x2F;span&gt;&lt;span&gt;                        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-&amp;gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                        #_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 laziness  👇 destructuring&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                          (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;[{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:keys &lt;&#x2F;span&gt;&lt;span&gt;[field op]} operations
+&lt;&#x2F;span&gt;&lt;span&gt;                                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:let &lt;&#x2F;span&gt;&lt;span&gt;[field1 (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get&lt;&#x2F;span&gt;&lt;span&gt; rule1 field)
+&lt;&#x2F;span&gt;&lt;span&gt;                                      field2 (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get&lt;&#x2F;span&gt;&lt;span&gt; rule2 field)]]
+&lt;&#x2F;span&gt;&lt;span&gt;                         #_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 a hashmap used in a (medium)-hot loop&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                            {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:field&lt;&#x2F;span&gt;&lt;span&gt; field
+&lt;&#x2F;span&gt;&lt;span&gt;                            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:eq? &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;op&lt;&#x2F;span&gt;&lt;span&gt; field1 field2)
+&lt;&#x2F;span&gt;&lt;span&gt;                            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:left&lt;&#x2F;span&gt;&lt;span&gt; field1
+&lt;&#x2F;span&gt;&lt;span&gt;                            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:right&lt;&#x2F;span&gt;&lt;span&gt; field2})
+&lt;&#x2F;span&gt;&lt;span&gt;                          #_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;            👇 hashmap lookup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                          (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;filter &lt;&#x2F;span&gt;&lt;span&gt;#(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;not &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:eq?&lt;&#x2F;span&gt;&lt;span&gt; %)))
+&lt;&#x2F;span&gt;&lt;span&gt;                          #_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    👇 hashmap operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;                          (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;map &lt;&#x2F;span&gt;&lt;span&gt;#(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dissoc&lt;&#x2F;span&gt;&lt;span&gt; % &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:eq?&lt;&#x2F;span&gt;&lt;span&gt;))))
+&lt;&#x2F;span&gt;&lt;span&gt;        diff (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;field-diff-fn&lt;&#x2F;span&gt;&lt;span&gt; rule-must-be-equal-operations)
+&lt;&#x2F;span&gt;&lt;span&gt;        mergeable-diff (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;field-diff-fn&lt;&#x2F;span&gt;&lt;span&gt; mergeable-rule-operations)]
+&lt;&#x2F;span&gt;&lt;span&gt; #_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 a hashmap used in a (medium)-hot loop&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:rule1&lt;&#x2F;span&gt;&lt;span&gt; rule1
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:rule2&lt;&#x2F;span&gt;&lt;span&gt; rule2
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:diff&lt;&#x2F;span&gt;&lt;span&gt; diff
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:mergeable-diff&lt;&#x2F;span&gt;&lt;span&gt; mergeable-diff}))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;and here&#x27;s one from the hottest part, where the data was diffed by one of its fields:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clj&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-clj &quot;&gt;&lt;code class=&quot;language-clj&quot; data-lang=&quot;clj&quot;&gt;&lt;span&gt;(defn diff-rules-by-keys
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;      👇 destructuring&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  [{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:keys &lt;&#x2F;span&gt;&lt;span&gt;[group-by-key-fn key-name]} path rules1 rules2]
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;                👇 hashmap lookup&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  (let [key-&amp;gt;rules1 (group-by-key-fn rules1)
+&lt;&#x2F;span&gt;&lt;span&gt;        key-&amp;gt;rules2 (group-by-key-fn rules2)
+&lt;&#x2F;span&gt;&lt;span&gt;        keys1 (set (keys key-&amp;gt;rules1))
+&lt;&#x2F;span&gt;&lt;span&gt;        keys2 (set (keys key-&amp;gt;rules2))
+&lt;&#x2F;span&gt;&lt;span&gt;        key-union (set&#x2F;union keys1 keys2)]
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;👇 laziness&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    (for [k key-union
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:let &lt;&#x2F;span&gt;&lt;span&gt;[path (conj path
+&lt;&#x2F;span&gt;&lt;span&gt;                           {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:key-name &lt;&#x2F;span&gt;&lt;span&gt;key-name
+&lt;&#x2F;span&gt;&lt;span&gt;                            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:key-val &lt;&#x2F;span&gt;&lt;span&gt;k})]]
+&lt;&#x2F;span&gt;&lt;span&gt;      (case [(contains? keys1 k)
+&lt;&#x2F;span&gt;&lt;span&gt;             (contains? keys2 k)]
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#_&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;          👇 hashmaps used in a hot loop&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true true&lt;&#x2F;span&gt;&lt;span&gt;] {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;::continue true
+&lt;&#x2F;span&gt;&lt;span&gt;                     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:path &lt;&#x2F;span&gt;&lt;span&gt;path
+&lt;&#x2F;span&gt;&lt;span&gt;                     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;::rules1 &lt;&#x2F;span&gt;&lt;span&gt;(get key-&amp;gt;rules1 k)
+&lt;&#x2F;span&gt;&lt;span&gt;                     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;::rules2 &lt;&#x2F;span&gt;&lt;span&gt;(get key-&amp;gt;rules2 k)}
+&lt;&#x2F;span&gt;&lt;span&gt;        [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false true&lt;&#x2F;span&gt;&lt;span&gt;] {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:plus true
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:path &lt;&#x2F;span&gt;&lt;span&gt;path
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:rules &lt;&#x2F;span&gt;&lt;span&gt;(set (get key-&amp;gt;rules2 k))}
+&lt;&#x2F;span&gt;&lt;span&gt;        [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true false&lt;&#x2F;span&gt;&lt;span&gt;] {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:minus true
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:path &lt;&#x2F;span&gt;&lt;span&gt;path
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;:rules &lt;&#x2F;span&gt;&lt;span&gt;(set (get key-&amp;gt;rules1 k))}))))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;So there are some obvious inefficiencies that might be worth it to change, great!&lt;br &#x2F;&gt;
+Unfortunately, doing that will make small details a bit uglier (when removing destructuring or the &lt;a href=&quot;https:&#x2F;&#x2F;clojuredocs.org&#x2F;clojure.core&#x2F;for&quot;&gt;&lt;code&gt;for&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; expressions).
+Introducing records to replace all the little hashmaps with something faster would be a drop-in replacement, which is nice.&lt;&#x2F;p&gt;
+&lt;p&gt;My verdict is:&lt;&#x2F;p&gt;
+&lt;p&gt;Clojure successfully makes it possible to write fast code when necessary, but idiomatic Clojure willingly sacrifices some performance for expressiveness and its lispy dynamicity.&lt;br &#x2F;&gt;
+This is fine.
+Clojure does not want to be a low-level language.&lt;br &#x2F;&gt;
+I was actually very positively surprised by all the escape hatches that were designed into the language to speed things up when necessary.&lt;&#x2F;p&gt;
+&lt;p&gt;I do like having the freedom to introduce abstractions that will have no runtime cost at all.
+So let&#x27;s look at Rust:&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;rust-performance&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#rust-performance&quot; aria-label=&quot;Anchor link for: rust-performance&quot;&gt;🔗&lt;&#x2F;a&gt;Rust Performance&lt;&#x2F;h3&gt;
+&lt;p&gt;One of Rust&#x27;s design goals was performance, and it &lt;a href=&quot;https:&#x2F;&#x2F;kornel.ski&#x2F;rust-c-speed&quot;&gt;can&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ixy-languages&#x2F;ixy-languages&#x2F;blob&#x2F;master&#x2F;Rust-vs-C-performance.md&quot;&gt;compete&lt;&#x2F;a&gt; with C, so I guess that means it succeeded.&lt;br &#x2F;&gt;
+But this doesn&#x27;t automatically make my program the fastest - I can write slow code in any language!&lt;br &#x2F;&gt;
+What was more interesting to me was how fast my program was going to be if I got it working and then spent one or two motivated weekends optimizing as best as I could.&lt;&#x2F;p&gt;
+&lt;p&gt;Rust&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;boats.gitlab.io&#x2F;blog&#x2F;post&#x2F;zero-cost-abstractions&#x2F;&quot;&gt;zero cost abstractions&lt;&#x2F;a&gt; definitely helped with that.&lt;br &#x2F;&gt;
+I could introduce wrapper types to make my type signatures more readable without affecting the performance at all.
+I could use the functional &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;iter&#x2F;trait.Iterator.html&quot;&gt;&lt;code&gt;Iterator&lt;&#x2F;code&gt; methods&lt;&#x2F;a&gt; like &lt;code&gt;map&lt;&#x2F;code&gt; and &lt;code&gt;filter&lt;&#x2F;code&gt; and get the same performance as if I was using imperative loops.&lt;&#x2F;p&gt;
+&lt;p&gt;I could also use mutability freely under the watchful eye of Rusts type system, which can both improve performance and make things more readable.
+Old-school imperative&#x2F;OO languages like Java allowed mutability everywhere, which often caused problems&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#mutability-problems&quot;&gt;10&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.
+Functional languages like Haskell and Clojure then tried to solve the problems with mutability by removing mutability as much as possible.&lt;br &#x2F;&gt;
+Rust has surprised me by making mutability palatable again&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#mutability-palatable&quot;&gt;11&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The area where Rust programmers &lt;a href=&quot;https:&#x2F;&#x2F;nnethercote.github.io&#x2F;perf-book&#x2F;heap-allocations.html?highlight=borrow#cow&quot;&gt;often&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;deterministic.space&#x2F;secret-life-of-cows.html#no-needless-copying&quot;&gt;have&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;llogiq.github.io&#x2F;2017&#x2F;06&#x2F;01&#x2F;perf-pitfalls.html&quot;&gt;to&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;rust&#x2F;comments&#x2F;adyd9j&#x2F;why_is_the_rust_version_of_this_fn_60_slower_than&#x2F;edl0bly&#x2F;?utm_source=reddit&amp;amp;utm_medium=web2x&amp;amp;context=3&quot;&gt;decide&lt;&#x2F;a&gt; between simple code and performance is when deciding between needlessly copying data or using references to the data.&lt;br &#x2F;&gt;
+Using references to a single instance of data can be wildly more performant, but it requires lifetime annotations and sometimes requires redesigning the code&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#borrow-redesign&quot;&gt;12&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s look at one of the functions in the medium-hot data normalization part again:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;                  👇  mutability here! it&amp;#39;s fine though
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;intersection&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mut &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;other&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Self&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; Option&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Self&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;match &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;accepts_all&lt;&#x2F;span&gt;&lt;span&gt;(), other.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;accepts_all&lt;&#x2F;span&gt;&lt;span&gt;()) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; use the more restrictive field
+&lt;&#x2F;span&gt;&lt;span&gt;        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;) =&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;            *&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field &lt;&#x2F;span&gt;&lt;span&gt;= other.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; self is more constrained, so we keep self
+&lt;&#x2F;span&gt;&lt;span&gt;        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;) =&amp;gt; {}
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; both accept everything, we can keep self
+&lt;&#x2F;span&gt;&lt;span&gt;        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;) =&amp;gt; {}
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; both are constrained, we need to calculate the intersection
+&lt;&#x2F;span&gt;&lt;span&gt;        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;) =&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; intersection = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field
+&lt;&#x2F;span&gt;&lt;span&gt;                .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;intersection&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;other.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; empty intersection -&amp;gt; unsatisfiable
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; intersection.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;is_empty&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 sometimes, imperative logic is nice!
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;None;
+&lt;&#x2F;span&gt;&lt;span&gt;            }
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 mutability again
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$field &lt;&#x2F;span&gt;&lt;span&gt;= intersection;
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; if we didn&amp;#39;t return None early, the field must be satisfiable!
+&lt;&#x2F;span&gt;&lt;span&gt;    Some(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Note the &lt;code&gt;$field&lt;&#x2F;code&gt; in the body - this was actually inside a macro definition!
+Parameterizing the logic by field access and type was a bit clunky in Rust.
+Similar functions in the Clojure version just take a keyword argument.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s now look at one of the hottest functions in the Rust implementation:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;next_step&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T: Eq + Ord + Hash, F: RuleField&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;, Item = T&amp;gt;&amp;gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;matcher&lt;&#x2F;span&gt;&lt;span&gt;: FieldMatcher&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;a&lt;&#x2F;span&gt;&lt;span&gt;, T, F&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Self &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; TODO according to heaptrack, this is a RAM hotspot. what do?
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; old_rules: Vec&amp;lt;_&amp;gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self
+&lt;&#x2F;span&gt;&lt;span&gt;        .old_rules
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;iter&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 this filter should be fast
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;filter&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vs&lt;&#x2F;span&gt;&lt;span&gt;| matcher.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;matches_inlined&lt;&#x2F;span&gt;&lt;span&gt;(vs))
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;copied&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 👇 heap allocation
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;    how about you do something about this, past Timo!
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;collect&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; new_rules: Vec&amp;lt;_&amp;gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self
+&lt;&#x2F;span&gt;&lt;span&gt;        .new_rules
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;iter&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;filter&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vs&lt;&#x2F;span&gt;&lt;span&gt;| matcher.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;matches_inlined&lt;&#x2F;span&gt;&lt;span&gt;(vs))
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;copied&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;collect&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;                       👇 the path values are very small, but
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;                         I&amp;#39;m still cloning inside a hot loop
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let mut&lt;&#x2F;span&gt;&lt;span&gt; path = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.path.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    matcher.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;add_step_inlined&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mut&lt;&#x2F;span&gt;&lt;span&gt; path);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    DiffState {
+&lt;&#x2F;span&gt;&lt;span&gt;        path,
+&lt;&#x2F;span&gt;&lt;span&gt;        old_rules,
+&lt;&#x2F;span&gt;&lt;span&gt;        new_rules,
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There are some inefficiencies visible here, and they&#x27;re probably the most important spots for performance improvements.
+But they&#x27;re still there as fixing them was too hard and&#x2F;or time-consuming for me.&lt;&#x2F;p&gt;
+&lt;p&gt;My verdict is:&lt;&#x2F;p&gt;
+&lt;p&gt;I think it&#x27;s a testament to the language that I could write an algorithm I could barely understand and get the performance to a state where the performance problems were caused by the amount of data I was intentionally creating and processing (instead of incidental inefficiencies).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;clojure-vs-rust&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#clojure-vs-rust&quot; aria-label=&quot;Anchor link for: clojure-vs-rust&quot;&gt;🔗&lt;&#x2F;a&gt;Clojure vs Rust?&lt;&#x2F;h2&gt;
+&lt;p&gt;If it wasn&#x27;t obvious before:
+I have become quite a Rust fan and it&#x27;s my preferred language to think in now.&lt;&#x2F;p&gt;
+&lt;p&gt;I definitely missed the Clojure &lt;a href=&quot;https:&#x2F;&#x2F;clojure.org&#x2F;guides&#x2F;repl&#x2F;introduction&quot;&gt;REPL&lt;&#x2F;a&gt; and &lt;a href=&quot;http:&#x2F;&#x2F;danmidwood.com&#x2F;content&#x2F;2014&#x2F;11&#x2F;21&#x2F;animated-paredit.html&quot;&gt;Paredit&lt;&#x2F;a&gt; after I stopped writing Clojure and I would love to have a similar experience in Kotlin or Rust&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#paredit-rust&quot;&gt;13&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;br &#x2F;&gt;
+The design approach of using a few elementary data structures for nearly everything and then manipulating those with functional programming can lead to wonderfully simple programs&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#rust-not-simple&quot;&gt;14&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Rust on the other hand is the most usable language that offers features that are otherwise only available in ML or Haskell.
+Writing Rust can sometimes feel &lt;a href=&quot;https:&#x2F;&#x2F;ferrous-systems.com&#x2F;blog&#x2F;rust-as-productive-as-kotlin&#x2F;&quot;&gt;as high level and productive as writing Kotlin&lt;&#x2F;a&gt;, but with a more expressive type system, a higher performance ceiling and fewer runtime restrictions&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#runtime&quot;&gt;15&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s ownership and mutability tracking features also really help writing &lt;a href=&quot;https:&#x2F;&#x2F;fasterthanli.me&#x2F;articles&#x2F;aiming-for-correctness-with-types&quot;&gt;correct software&lt;&#x2F;a&gt;
+, and I miss those features in other languages.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;and-what-happened-to-that-diff-tool&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#and-what-happened-to-that-diff-tool&quot; aria-label=&quot;Anchor link for: and-what-happened-to-that-diff-tool&quot;&gt;🔗&lt;&#x2F;a&gt;And what happened to that diff tool?&lt;&#x2F;h2&gt;
+&lt;p&gt;After switching to Rust, I had to implement more complicated logic that resolved dependencies between the rules I was diffing.
+This became complicated enough that even with a static type system I could only barely understand it.
+I doubt I would have been able to finish it in Clojure.&lt;&#x2F;p&gt;
+&lt;p&gt;In the end, I reached a stage where the tool seemed to work fine.
+I managed to improve the performance to acceptable levels and then stopped working on the tool.
+My colleagues who I wrote the tool for continued occasionally using it for over a year without any complaints.&lt;&#x2F;p&gt;
+&lt;p&gt;The whole system whose input my tool was diffing is (hopefully) going to be sundowned soon and the replacement system will offer a simpler way to analyse changes:&lt;br &#x2F;&gt;
+It will maintain a database counting the actual entities that exist, indexed by the fields that the rules apply to.&lt;&#x2F;p&gt;
+&lt;p&gt;My diff tool will be replaced by a database lookup and I am very happy about that.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;hr &#x2F;&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;hooked-on-rust&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;I was immediately hooked by the incredibly fast performance - which was initially mostly the difference between startup times and the respective excel parsing libraries, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mjul&#x2F;docjure&quot;&gt;docjure&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;tafia&#x2F;calamine&#x2F;&quot;&gt;calamine&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;not-hating-on-clojure&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;2&lt;&#x2F;sup&gt;
+&lt;p&gt;I&#x27;m not trying to rip into Clojure here (after Rust and Kotlin it&#x27;s my third favourite language).&lt;br &#x2F;&gt;
+I&#x27;m trying to show how great Rust is by comparing it to a very good language.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;insta-result&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;3&lt;&#x2F;sup&gt;
+&lt;p&gt;This is a totally sensible design, but it means that I can only handle &lt;code&gt;instaparse&lt;&#x2F;code&gt; errors by using the &lt;code&gt;instaparse&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Engelberg&#x2F;instaparse&#x2F;blob&#x2F;4d1903b059e77dc0049dfbc75af9dce995756148&#x2F;README.md#parse-errors&quot;&gt;function &lt;code&gt;insta&#x2F;failure?&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;rust-error-handling-links&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;4&lt;&#x2F;sup&gt;
+&lt;p&gt;See &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;book&#x2F;ch09-00-error-handling.html&quot;&gt;the Rust Book&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;blog.burntsushi.net&#x2F;rust-error-handling&#x2F;&quot;&gt;this artice&lt;&#x2F;a&gt; by &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;BurntSushi&#x2F;ripgrep&#x2F;&quot;&gt;ripgrep&#x27;s&lt;&#x2F;a&gt; Andrew Gallant, &lt;a href=&quot;https:&#x2F;&#x2F;blog.yoshuawuyts.com&#x2F;error-handling-survey&#x2F;&quot;&gt;the error handling survey by Yoshua Wuyts&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;nick.groenen.me&#x2F;posts&#x2F;rust-error-handling&#x2F;&quot;&gt;this article by Nick Groenen&lt;&#x2F;a&gt; or &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=rAF8mLI0naQ&quot;&gt;this talk by Jane Lusby&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;panic-ref&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;5&lt;&#x2F;sup&gt;
+&lt;p&gt;There&#x27;s also the &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;macro.panic.html&quot;&gt;&lt;code&gt;panic&lt;&#x2F;code&gt; macro&lt;&#x2F;a&gt; which works similar to exceptions in that it stops and unwinds your program, but unlike exceptions catching a panic is very rarely a good idea.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;anyhow-usecase&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;6&lt;&#x2F;sup&gt;
+&lt;p&gt;Handling all error types uniformly is &lt;code&gt;anyhow&lt;&#x2F;code&gt;s main usecase.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;try-blocks&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;7&lt;&#x2F;sup&gt;
+&lt;p&gt;I can&#x27;t wait for &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;nightly&#x2F;unstable-book&#x2F;language-features&#x2F;try-blocks.html&quot;&gt;&lt;code&gt;try&lt;&#x2F;code&gt; blocks&lt;&#x2F;a&gt; to be stabilized.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;and-you&amp;#39;ll-like-it&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;8&lt;&#x2F;sup&gt;
+&lt;p&gt;Seriously, it&#x27;s actually quite popular.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;clojure-goes-fast&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;9&lt;&#x2F;sup&gt;
+&lt;p&gt;See &lt;a href=&quot;https:&#x2F;&#x2F;tech.redplanetlabs.com&#x2F;2020&#x2F;09&#x2F;02&#x2F;clojure-faster&#x2F;&quot;&gt;these&lt;&#x2F;a&gt; &lt;a href=&quot;http:&#x2F;&#x2F;clojure-goes-fast.com&#x2F;blog&#x2F;java-arrays-and-unchecked-math&#x2F;&quot;&gt;articles&lt;&#x2F;a&gt; on how to improve Clojure performance.
+They are, as far as I can tell, very accurate and contain good advice.
+They also both discourage usual Clojure idioms or recommend less idiomatic alternatives.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;mutability-problems&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;10&lt;&#x2F;sup&gt;
+&lt;p&gt;This caused many Java programmers to avoid passing mutable collections around.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;mutability-palatable&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;11&lt;&#x2F;sup&gt;
+&lt;p&gt;Interestingly, some of my coworkers who are as fond of Kotlin as I am of Rust seem to have a much stronger aversion to mutability than I do.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;borrow-redesign&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;12&lt;&#x2F;sup&gt;
+&lt;p&gt;Some part of the code has to own the data to keep it alive while the hot loops use the references to it.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;paredit-rust&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;13&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;rust-analyzer.github.io&#x2F;manual.html#extend-selection&quot;&gt;Rust-analyzer&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;www.jetbrains.com&#x2F;help&#x2F;idea&#x2F;working-with-source-code.html#editor_code_selection&quot;&gt;IntelliJ&lt;&#x2F;a&gt; support semantic extend&#x2F;shrink selection though, which is an important feature of Paredit.
+The slurp and barf features of Paredit probably don&#x27;t make a lot of sense in languages without S-expressions anyway.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;rust-not-simple&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;14&lt;&#x2F;sup&gt;
+&lt;p&gt;Some parts, like the part where I was abstracting over fields of a datastructure in the diff algorithm, are noticeably more painful in Rust.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;runtime&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;15&lt;&#x2F;sup&gt;
+&lt;p&gt;Rust can be used in embedded systems, it can be compiled to WASM and it is very suitable for CLI tools where e.g. the JVM startup is painful.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+</description>
+      </item>
+    </channel>
+</rss>
